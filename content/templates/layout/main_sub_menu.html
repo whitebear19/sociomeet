@@ -1,0 +1,25 @@
+{% load static %}
+<div class="main_sub_menu">
+    <ul>
+        <li class="sub_menu_item sub_menu_item_trending">
+            <a href="{% url 'account:trending' %}">
+                <img class="main_sub_menu_img" src="{% static 'img/trending.png' %}" alt="">
+            </a>
+        </li>
+        <li class="sub_menu_item sub_menu_item_group">
+            <a href="{% url 'groups:groupdashboard' %}">
+                <img class="main_sub_menu_img" src="{% static 'img/user_group.png' %}" alt="">
+            </a>
+        </li>
+        <li class="sub_menu_item sub_menu_item_page">
+            <a href="{% url 'pages:pagedashboard' %}">
+                <img class="main_sub_menu_img" src="{% static 'img/pages.png' %}" alt="">
+            </a>
+        </li>
+        <li class="sub_menu_item sub_menu_item_job">
+            <a href="{% url 'jobs:jobdashboard' %}">
+                <img class="main_sub_menu_img" src="{% static 'img/jobs.png' %}" alt="">
+            </a>
+        </li>        
+    </ul>
+</div>

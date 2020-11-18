@@ -1,0 +1,890 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <link rel="icon" type="image/png" href="{% static 'img/fav.png' %}">
+      <title>Sociomeet</title>
+      
+      <link rel="stylesheet" type="text/css" href="{% static 'vendor/slick/slick.min.css' %}"/>
+      <link rel="stylesheet" type="text/css" href="{% static 'vendor/slick/slick-theme.min.css' %}"/>
+      
+      <link href="{% static 'vendor/icons/feather.css' %}" rel="stylesheet" type="text/css">
+      
+      <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+      
+      <link href="{% static 'css/style.css' %}" rel="stylesheet">
+      <link href="{% static 'css/jquery.emojipicker.css' %}" rel="stylesheet">
+      <link href="{% static 'css/jquery.emojipicker.tw.css' %}" rel="stylesheet">
+      <link href="{% static 'css/slider.css' %}" rel="stylesheet">
+      
+      <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+      <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+      
+      <script type="text/javascript" src="{% static 'vendor/slick/slick.min.js' %}"></script>
+      
+      <script src="{% static 'js/osahan.js' %}"></script>
+      <script src="{% static 'js/sweetalert2.js' %}"></script>
+      <script src="{% static 'js/jquery.cookie.js' %}"></script>
+      <script src="{% static 'js/custom.js' %}"></script>
+      <script src="{% static 'js/autosize.js' %}"></script>
+      <script src="{% static 'js/jquery.emojipicker.js' %}"></script>
+      <script src="{% static 'js/jquery.emojis.js' %}"></script>
+      <script src="{% static 'js/slider.js' %}"></script>
+      <script src="https://kit.fontawesome.com/38c20fcb98.js" crossorigin="anonymous"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDL67IIFF0YgSBp95rU_OnzsRogvbqhH6M&libraries=places&callback=initMap" async defer></script>
+    
+      
+   </head>
+   <body>
+      <!-- Navigation -->
+      <nav class="navbar navbar-expand navbar-dark bg-green osahan-nav-top p-0">
+         <div class="container">
+            <a class="navbar-brand mr-2" href="/"><img src="{% static 'img/logo_sm.png' %}" alt="">
+            </a>
+            <form class="d-none d-sm-inline-block form-inline mr-auto my-2 my-md-0 mw-100 navbar-search">
+               <div class="input-group">
+                  <input type="text" class="form-control search_word text-white shadow-none border-0" placeholder="Search people, jobs & more..." aria-label="Search" aria-describedby="basic-addon2">
+                  <div class="input-group-append">
+                     <button class="btn btn_top_menu_search" type="button">
+                     <i class="feather-search"></i>
+                     </button>
+                  </div>
+               </div>
+            </form>
+            <ul class="navbar-nav ml-auto d-flex align-items-center">
+               <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+               <li class="nav-item dropdown no-arrow d-sm-none">
+                  <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="feather-search mr-2"></i>
+                  </a>
+                  <!-- Dropdown - Messages -->
+                  <div class="dropdown-menu dropdown-menu-right p-3 shadow-sm animated--grow-in" aria-labelledby="searchDropdown">
+                     <form class="form-inline mr-auto w-100 navbar-search">
+                        <div class="input-group">
+                           <input type="text" class="form-control search_word border-0 text-white shadow-none" placeholder="Search people, jobs and more..." aria-label="Search" aria-describedby="basic-addon2">
+                           <div class="input-group-append">
+                              <button class="btn btn_top_menu_search" type="button">
+                              <i class="feather-search"></i>
+                              </button>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+               </li>
+               
+               <li class="nav-item dropdown mr-2">
+                  <a class="nav-link dropdown-toggle pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="feather-file-text mr-2"></i><span class="d-none d-lg-inline">Learn</span>
+                  </a>
+                  <!-- Dropdown - User Information -->
+                  <div class="dropdown-menu dropdown-menu-right shadow-sm">
+                     <a class="dropdown-item" href="{% url 'account:company_profile' %}"><i class="feather-user-plus mr-1"></i> Company Profile</a>
+                     <a class="dropdown-item" href="{% url 'account:faq' %}"><i class="feather-help-circle mr-1"></i> Faq</a>
+                     <a class="dropdown-item" href="{% url 'account:terms' %}"><i class="feather-book mr-1"></i> Terms</a>
+                     <a class="dropdown-item" href="{% url 'account:privacy' %}"><i class="feather-list mr-1"></i> Privacy</a>
+                     
+                  </div>
+               </li>
+               <li class="nav-item dropdown no-arrow mx-1 osahan-list-dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     <i class="feather-message-square"></i>
+                     <!-- Counter - Alerts -->
+                     <span class="badge badge-danger badge-counter cnt_msg"></span>
+                  </a>
+                  <!-- Dropdown - Alerts -->
+                  <div class="dropdown-list dropdown-menu dropdown-menu-right shadow-sm">
+                     <h6 class="dropdown-header">
+                        Message Center
+                     </h6>
+                     <div class="new_message_list">
+                        
+                     </div>                     
+                    
+                   
+                     <a class="dropdown-item text-center small text-gray-500" href="/messages">Read More Messages</a>
+                  </div>
+               </li>
+               <li class="nav-item dropdown no-arrow mx-1 osahan-list-dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     <i class="feather-bell"></i>
+                     <!-- Counter - Alerts -->
+                     <span class="badge badge-info badge-counter cnt_notification">0</span>
+                  </a>
+                  <!-- Dropdown - Alerts -->
+                  <div class="dropdown-list notification_list_wrap dropdown-menu dropdown-menu-right shadow-sm">
+                     <h6 class="dropdown-header">
+                        Alerts Center
+                     </h6>
+                     <div class="notification_list notification_unread custom_scroll">
+
+                     </div>        
+                     <a class="dropdown-item text-center small text-gray-500" href="{% url 'account:notifications' %}">Show All Alerts</a>
+                  </div>
+               </li>
+               <!-- Nav Item - User Information -->
+               <li class="nav-item dropdown no-arrow ml-1 osahan-profile-dropdown">
+                  <a class="nav-link dropdown-toggle pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     {% if user.avatar == '' %} 
+                        <img class="img-profile rounded-circle user_avatar cur_user_avatar_url" src="{% static 'img/user.png' %}">
+                     {% else %}
+                        <img class="img-profile rounded-circle user_avatar cur_user_avatar_url" src="{{ user.avatar.url }}">
+                     {% endif %}
+                  </a>
+                  <!-- Dropdown - User Information -->
+                  <div class="dropdown-menu dropdown-menu-right shadow-sm">
+                     <div class="p-3 d-flex align-items-center">
+                        <div class="dropdown-list-image mr-3">
+                           {% if user.avatar == '' %} 
+                              <img class="img-profile rounded-circle" src="{% static 'img/user.png' %}">
+                           {% else %}
+                              <img class="img-profile rounded-circle" src="{{ user.avatar.url }}">
+                           {% endif %}
+                           <div class="status-indicator bg-success"></div>
+                        </div>
+                        <div class="font-weight-bold">
+                           <div class="text-truncate user_name">
+                              <span class="user_full_name">{{ user.first_name }} {{ user.last_name }}</span>
+                              <p class="text-blue mb-0" style="font-family: 'Times New Roman', Times, serif;">
+                                 {% if user.email %}
+                                    {{ user.email }}
+                                 {% else %}
+                                    {{ user.phone }}
+                                 {% endif %}
+                              </p>
+                           </div> 
+                        </div>
+                     </div>
+                     <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'account:view_user_profile' user.username %}"><i class="feather-user mr-1"></i> My Account</a>
+                        <a class="dropdown-item" href="{% url 'account:editprofile' %}"><i class="feather-edit mr-1"></i> Edit Profile</a>
+                        <a class="dropdown-item" href="{% url 'account:userposts' %}"><i class="feather-book mr-1"></i> My Posts</a>
+                        <a class="dropdown-item" href="{% url 'jobs:userjobs' %}"><i class="feather-briefcase mr-1"></i> My Jobs</a>
+                     <div class="dropdown-divider"></div>
+                     
+                     <a class="dropdown-item" href="javascript:{document.getElementById('logout').submit()}"><i class="feather-log-out mr-1"></i> Logout</a>
+                        <form method="post" action="{% url 'account:logout' %}" id="logout">
+                            {% csrf_token %}
+                            <input type="hidden">
+                        </form>
+                  </div>
+               </li>
+            </ul>
+         </div>
+      </nav>
+       {% block content %}
+       {% endblock %}     
+      <div class="contact_list_global">
+         <div class="contact_list_global_header">
+            <span>Chat</span>
+         </div>
+         <div class="contact_body">
+            <div class="contact_list_global_body common_body_chat_contact">
+               <ul class="contact_list">
+                              
+               </ul>
+               <ul class="history_list" style="display: none;">
+                              
+               </ul>
+            </div>
+            <div class="contact_list_global_search">
+               <div class="pos_rel">
+                  <span class="contact_search_icon"><i class="fas fa-search"></i></span>
+                  <input type="text" class="searchword" placeholder="Search...">
+               </div>
+            </div>
+         </div>
+            
+      </div>    
+      <div class="chat_box_area">
+               
+      </div>      
+
+      <div class="search_result_view display_none">
+         <div class="header mt-2 text-right">
+            <button class="btn_transparent btn_close_search_result">
+               <i class="fas fa-times"></i>
+            </button>
+         </div>
+         <div class="body">
+            <div class="result_list custom_scroll">
+
+            </div>            
+         </div>
+      </div>
+      <div>         
+         <input type="hidden" id="page_where" value="global">
+         <input type="hidden" id="room_id_global" value="">
+      </div>
+      <div class="" id="loading">
+        <div class="lds-ring"><div></div><div></div><div></div><div></div>
+      </div>
+      <div>
+         <form action="{% url 'account:messages' %}" id="go_message" method="get">
+
+         </form>
+      </div>
+      <script>
+         var page_where = false;
+         
+         function get_new_message_global()
+         {
+            $.ajax({
+                url: "{% url 'chat:get_new_message_global' %}",
+                method: 'GET', 
+                type: 'json',                  
+                success: function (response) {
+                   
+                  data = response.messages;
+                  
+                  $(".new_message_list").html("");
+                  var cnt_msg=0;
+                  for(var i=0;i<data.length;i++)
+                  {
+                     var html = "";
+                     html +='<div class="dropdown-item d-flex align-items-center new_message_item" data-rid="'+data[i].room_id+'" data-username="'+data[i].full_name+'"><div class="dropdown-list-image mr-3">';
+                     if(data[i].user_avatar=="")
+                     {
+                     html+='<img class="rounded-circle" src="/static/img/avatar.png" alt="">'
+                     }
+                     else
+                     {
+                     html+='<img class="rounded-circle" src="'+data[i].user_avatar+'" alt="">'
+                     }
+                     html+='</div><div class="font-weight-bold overflow-hidden"><div class="text-truncate">'+data[i].message+'</div><div class="small text-gray-500">'+data[i].full_name+'</div></div></div>';
+                     $(".new_message_list").append(html);
+                     cnt_msg += parseInt(data[i].cnt_message);                     
+                  }
+                  
+                  if(cnt_msg > 0)
+                  {
+                     $('.cnt_msg').html(cnt_msg);
+                  }
+                  else
+                  {
+                     $('.cnt_msg').html('');
+                  }
+                }
+            });
+         }
+         function get_all_room()
+         {
+            $.ajax({
+               url: "{% url 'chat:get_all_room' %}",
+               method: 'GET', 
+               type: 'json',   
+               data: {searchword:$(".searchword").val()},                      
+               success: function (response) {
+                  var rooms = response.rooms;
+                
+                  if(rooms.length > 0)
+                  {                     
+                     $(".contact_list").html("");
+                     for(var i=0;i<rooms.length;i++)
+                     {
+                        var html = "";
+                        html +='<li>';
+                        html +='<div class="d-flex align-items-center osahan-post-header mb-2 people-list">'
+                        html +='<div class="dropdown-list-image mr-2">';
+                       
+                        if(rooms[i].avatar=="")
+                        {  
+                          
+                           html +='<span class="user_no_avatar capital">'+(rooms[i].full_name).charAt(0)+'</span>';
+                        }
+                        else
+                        {
+                           html +='<img class="rounded-circle" src="';
+                           html += rooms[i].avatar+'">';
+                        }
+                        html +='<div class="status-indicator bg-success"></div></div><div class="font-weight-bold mr-2"><div class="text-truncate"><button class="btn_room_item" data-rid="'+rooms[i].room_id+'" data-accepted="'+rooms[i].accepted+'"  data-status="'+rooms[i].status+'" data-username="'+rooms[i].full_name+'">'+rooms[i].full_name+'</button></div><div class="small text-gray-500"></div></div>';
+                        
+                        if(rooms[i].accepted=='1')
+                        {
+                           html +='<span class="ml-auto">'+rooms[i].created_at+'</span>';
+                           if(rooms[i].cnt_message != "")
+                           {
+                              html +='<span class="alert_unread_cnt_message">'+rooms[i].cnt_message+'</span>';
+                           }
+                        }
+                        else if(rooms[i].accepted=='0')
+                        {
+                           html+='<span class="col-green">Waiting Accept</span>';
+                        }
+                        else
+                        {
+                           html+='<span class="ml-auto"><button class="btn_room_item btn_transparent col-green" data-rid="'+rooms[i].room_id+'" data-username="'+rooms[i].full_name+'">Accept</button></span>';
+                        }
+                        
+                        html +='</div></li>'; 
+                        if(rooms[i].status == '1')
+                        {
+                           $(".contact_list").append(html);
+                        }
+                        else
+                        {
+                           $(".history_list").append(html);
+                        }
+                     }        
+                  }
+               }
+            })
+         }
+         
+         function send_message_global()
+         {
+            var dt = new Date();
+            var room_id = $("#room_id_global").val();
+            console.log(dt)
+            var time = dt.getHours() + ":" + dt.getMinutes();
+            if(page_where)
+            {
+               var message = $(".send_message_global_message").val();
+            }
+            else
+            {
+               var message = $(".send_message_global_"+room_id).val();
+            }
+            
+            if(message == "")
+            {
+               return false;
+            }
+            if(room_id == "")
+            {
+               return false;
+            }
+            var html = "";
+            
+            html += '<li><div class="message_item align-items-center osahan-post-header"><div class="mr-1 text-right"><p class="msg_sent" title=""><span class="msg_created mr-1">'+time+'</span>'+message+'</p></div></div></li>';
+            if(page_where)
+            {
+               $('.chat_item_content_message').append(html);
+               $(".send_message_global_message").val("");
+               $('.chat_item_view_body_message').scrollTop($('.chat_item_view_body_message')[0].scrollHeight);
+            }
+            else
+            {
+               $('.chat_item_content_'+room_id).append(html);
+               $(".send_message_global_"+room_id).val("");
+               $('.chat_item_view_body_'+room_id).scrollTop($('.chat_item_view_body_'+room_id)[0].scrollHeight);
+            }
+            
+            $.ajax({
+               url: "{% url 'chat:store_message' %}",
+               method: 'GET', 
+               type: 'json',    
+               data: {room_id:room_id,message:message},                       
+               success: function (response) {                  
+                  if(!response.results)
+                  {
+                     $.cookie('room_id', '');
+                     $.cookie('username', '');                    
+                     location.reload();
+                  }
+               }
+            });
+         }
+         
+         function get_new_message()
+         {
+            if($("#room_id_global").val() == "")
+            {
+               return false;
+            }
+            else
+            {            
+               $.ajax({
+                  url: "{% url 'chat:get_new_message' %}",
+                  method: 'GET', 
+                  type: 'json',    
+                  data: {room_id:$("#room_id_global").val()},                       
+                  success: function (response) {
+                     var messages = response.messages;
+                     for(var j=0;j<messages.length;j++)
+                     {
+                           var checked = true;
+                           $(".message_item").each(function(){
+                              if(messages[j].message_id == $(this).data('mid'))
+                              {
+                                 checked = false;
+                              }
+                           });
+                           if(checked)
+                           {
+                              
+                              var html = "";
+                              if(messages[j].me=="0")
+                              {
+                                 html += '<li><div data-mid="'+messages[j].message_id+'" class="d-flex message_item align-items-center osahan-post-header"><div class="dropdown-list-image mr-0 mb-auto"><img class="rounded-circle" src="';
+                                 if(messages[j].avatar=="")
+                                 {
+                                       html += "/static/img/user.png";
+                                 }
+                                 else
+                                 {
+                                       html += messages[j].avatar;
+                                 }
+                                 html +='" alt=""></div><div class="mr-1"><p class="msg_received" title="'+messages[j].created_at+' ago">'+messages[j].message+'</p></div></div></li>';
+                                 $('.chat_item_content_'+messages[j].room_id).append(html);  
+                                 $('.chat_item_view_body_'+messages[j].room_id).scrollTop($('.chat_item_view_body_'+messages[j].room_id)[0].scrollHeight); 
+                                
+                              }
+                              else
+                              {
+                                 html += '<li><div data-mid="'+messages[j].message_id+'" class="message_item align-items-center osahan-post-header"><div class="mr-1 text-right"><p class="msg_sent" title="'+messages[j].created_at+' ago">'+messages[j].message+'</p></div></div></li>';
+                              }
+                           }
+                                             
+                     }                 
+                  }
+               })
+            }
+        }
+
+         function get_new_notification()
+         {
+            $.ajax({
+               url: "{% url 'account:get_new_notification' %}",
+               method: 'GET', 
+               type: 'json',             
+               success: function (response) {                  
+                  var data = response.results;
+                  if(data.length > 0)
+                  {                     
+                     $(".cnt_notification").html(data.length);
+                     for(var j=0;j<data.length;j++)
+                     {
+                        var checked = true;
+                        $(".notification_unread_item").each(function(){
+                           if(data[j].id == $(this).data('id'))
+                           {
+                              checked = false;
+                           }
+                        });
+                        if(checked)
+                        {
+                           var html = '';
+                           html += '<div class="pos_rel notification_set_read notification_unread_item notification_'+data[j].id+'" data-id="'+data[j].id+'">';
+                           html += '<div class="dropdown-item d-flex align-items-center" href="';
+                           html += '">';
+                           html += '<div class="mr-3">';      
+                           html += '<div>';
+                           html += '<i class="far fa-bell"></i>';         
+                           html += '</div>';
+                           html += '</div>';            
+                           html += '<div class="text-truncate pos_rel notification_item">';            
+                           html += '<span class="notification_subject">'+data[j].subject+'</span>';            
+                           html += '<div class="small notification_body text-truncate">'+data[j].body+'</div>';            
+                           html += '</div>';            
+                           html += '</div>';            
+                           html += '<button class="btn_delete_noti btn_transparent" data-id="'+data[j].id+'">';            
+                           html += '<i class="fas fa-times"></i>';            
+                           html += '</button>';            
+                           html += '</div>';
+                           $(".notification_unread").prepend(html);
+                        }
+                                                
+                     }    
+                  }
+                               
+               }
+            })
+         }
+         function get_notification()
+         {
+         $.ajax({
+                url: "{% url 'account:get_notification' %}",
+                method: 'GET', 
+                type: 'json',             
+                success: function (response) {                  
+                     var data = response.results;
+                     console.log("data");
+                     if(data.length > 0)
+                     {                        
+                        var cnt_notification=0;
+                        for(var j=0;j<data.length;j++)
+                        {
+                           var html = '';
+                           html += '<div class="pos_rel notification_set_read notification_unread_item notification_'+data[j].id+'" data-id="'+data[j].id+'">';
+                           html += '<div class="dropdown-item d-flex align-items-center" href="';
+                           html += '">';
+                           html += '<div class="mr-3">';      
+                           html += '<div>';
+                           html += '<i class="far fa-bell"></i>';         
+                           html += '</div>';
+                           html += '</div>';            
+                           html += '<div class="text-truncate pos_rel notification_item">';            
+                           html += '<span class="notification_subject">'+data[j].subject+'</span>';            
+                           html += '<div class="small notification_body text-truncate">'+data[j].body+'</div>';            
+                           html += '</div>';            
+                           html += '</div>';            
+                           html += '<button class="btn_delete_noti btn_transparent" data-id="'+data[j].id+'">';            
+                           html += '<i class="fas fa-times"></i>';            
+                           html += '</button>';            
+                           html += '</div>';
+                           
+                           
+                           if(data[j].read=='0')
+                           {
+                              $(".notification_unread").append(html);
+                              cnt_notification+=1;
+                           }
+                           else if(data[j].read=='1')
+                           {
+                              $(".notification_read").append(html);
+                           }                            
+                        
+                        }  
+                        $(".cnt_notification").html(cnt_notification);  
+                    }
+                    else
+                    {
+
+                    }
+                                
+                }
+            });
+         }
+
+         function get_stored_message()
+         {
+            $('#loading').css('display','block');
+            var rid = $("#room_id_global").val();
+            $.ajax({
+                url: "{% url 'chat:get_stored_message' %}",
+                method: 'GET', 
+                type: 'json',    
+                data: {room_id:rid},                       
+                success: function (response) {
+                     var messages = response.messages;    
+                     $('#loading').css('display','none');                         
+                     $('.chat_item_content_'+rid).html(""); 
+                     if($("#page_where").val()=="message")
+                     {
+                        $('.chat_item_content_message').html("");                        
+                     }       
+                    var iswhen = '';
+                    for(var j=0;j<messages.length;j++)
+                    {
+                        var html = "";
+                        if(iswhen == messages[j].date)
+                        {
+
+                        }
+                        else
+                        {
+                           iswhen = messages[j].date;
+                           html +=`
+                              <li>
+                                 <div class="text-center mt-15 mb-15">
+                                    <label class="msg_date">
+                                       ${messages[j].date}
+                                    </label>
+                                 </div>
+                              </li>
+                           `;
+                        }
+                        if(messages[j].me=="0")
+                        {
+                            html += `
+                            <li>
+                              <div data-mid="${messages[j].message_id}" class="d-flex message_item align-items-center osahan-post-header">
+                                 <div class="dropdown-list-image mr-0 mb-auto">
+                                    <img class="rounded-circle" src="`;
+                                    if(messages[j].avatar=="")
+                                    {
+                                       html += "/static/img/user.png";
+                                    }
+                                    else
+                                    {
+                                       html += messages[j].avatar;
+                                    }
+                            html +=`" alt="">
+                                 </div>
+                                 <div class="mr-1">
+                                    <p class="msg_received" title="${messages[j].created_at} ago">${messages[j].message}
+                                       <span class="ml-1 msg_created">${messages[j].time}</span>
+                                    </p>
+                                 </div>
+                              </div>
+                           </li>`;
+                        }
+                        else
+                        {
+                            html += `
+                              <li>
+                                 <div data-mid="${messages[j].message_id}" class="message_item align-items-center osahan-post-header">
+                                    <div class="mr-1 text-right">
+                                       <p class="msg_sent" title="${messages[j].created_at} ago">
+                                          <span class="msg_created mr-1">${messages[j].time}</span>
+                                          ${messages[j].message}
+                                       </p>
+                                    </div>
+                                 </div>
+                              </li>
+                           `;
+                        }    
+                        if($("#page_where").val()=="message")
+                        {                          
+                           $('.chat_item_content_message').append(html);
+                        }                  
+                        else
+                        {
+                           $('.chat_item_content_'+rid).append(html);
+                        }
+                            
+                                            
+                    }   
+                    if(page_where)
+                    {
+                        $('.chat_item_view_body_message').scrollTop($('.chat_item_view_body_message')[0].scrollHeight);  
+                        $('.chat_box_username_message').html($.cookie('username'));                        
+                    }
+                    else
+                    {
+                       $('.chat_item_view_body_'+rid).scrollTop($('.chat_item_view_body_'+rid)[0].scrollHeight);  
+                    }
+                               
+                }
+            })
+        }
+         function page_init()
+         {
+            if($("#page_where").val()=="message")
+            {                          
+               page_where = true;
+               $(".chat_box_area").remove();
+            }                  
+            else
+            {
+               page_where = false;
+            }
+            
+            get_all_room();
+            get_new_message_global();            
+            get_notification()
+
+            if($.cookie('chatlistextends'))
+            {
+               if($.cookie('chatlistextends')=='1')
+               {
+                  $(".contact_body").css("display","block");
+               }
+               else{
+                  $(".contact_body").css("display","none");
+               }
+            }
+            else
+            {
+               $.cookie('chatlistextends','0');
+               $(".contact_body").css("display","none");
+            }
+            if(page_where)
+            {
+               if($.cookie('room_id'))
+               {               
+                  var room_id =  $.cookie('room_id');                  
+                  $("#room_id_global").val(room_id);                  
+                  get_stored_message();
+               
+               }
+            }
+            
+         }
+         $(document).ready(function(){
+            page_init();
+            
+            setInterval(function(){                 
+               // get_new_message_global();               
+               // get_new_message();
+               // get_all_room();
+               // get_new_notification();
+               
+            }, 2000);
+            $('.send_message_global').keypress(function(event){
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if(keycode == '13'){
+                  send_message_global()
+                }                
+            });
+            
+            $(document).on('click','.btn_send',function(){               
+               send_message_global();
+            });
+            
+            $(document).on('click','.btn_close_chat_box',function(){   
+               var rid = $(this).data('rid');            
+               $(".chat_item_view_"+rid).remove();
+               
+            });
+            $(document).on('click','.btn_room_item',function(){               
+               var rid = $(this).data('rid');
+               var username = $(this).data('username');  
+               var status = $(this).data('status');
+                     
+               $("#room_id_global").val(rid);
+                             
+               $.cookie('room_id', rid);
+               $.cookie('username', username); 
+               
+               if(!page_where)
+               {                  
+                  var chat_item_html = '';
+                  chat_item_html = `
+                     <div class="chat_item_view chat_item_view_${rid}" data-rid="${rid}" data-username="${username}">
+                        <div class="chat_item_view_header pos_rel">
+                           <span class="chat_box_username chat_box_username_${rid}"></span>
+                           <button class="btn_close_chat_box" data-rid="${rid}">
+                              <i class="fas fa-times"></i>
+                           </button>
+                        </div>
+                        <div class="chat_item_view_body_${rid} common_body_chat_contact">
+                           <ul class="chat_item_content chat_item_content_${rid}">
+                                 
+                           </ul>
+                        </div>
+                        <div class="chat_item_type_message">
+                           <div class="pos_rel">               
+                              <textarea type="text" class="send_message_global send_message_global_${rid}" placeholder="Type a message"></textarea>
+                              <button class="btn_global_chat btn_send">
+                                 <i class="fas fa-paper-plane"></i>
+                              </button>
+                              <input type="hidden" class="cur_room_id" value="${rid}">
+                           </div>            
+                        </div>
+                     </div>
+                  `;
+                  if($(".chat_box_area").find(".chat_item_view_"+rid))
+                  {                  
+                     $(".chat_item_view_"+rid).remove();
+                  }
+                  $(".chat_box_area").prepend(chat_item_html);
+               }
+               if(page_where)
+               {
+                  $(".chat_box_username_message").html(username);
+               }
+               else
+               {
+                  $(".chat_box_username_"+rid).html(username);
+               }
+               
+               
+               get_stored_message();
+               
+            });
+            $(document).on('click','.send_message_global',function(){
+                $.ajax({
+                    url: "{% url 'chat:set_read' %}",
+                    method: 'GET', 
+                    type: 'json',    
+                    data: {room_id:$("#room_id_global").val()},                       
+                    success: function (response) {
+                        if(!response)
+                        {
+                            location.reload();
+                        }
+                    }
+                });
+            });
+            
+            
+            $(document).on('click','.contact_list_global_header',function(){               
+               $(".contact_body").slideToggle();
+               if($.cookie('chatlistextends')=="1")
+               {
+                  $.cookie('chatlistextends','0');
+               }
+               else
+               {
+                  $.cookie('chatlistextends','1');
+               }
+               
+            });
+            
+            $(document).on('click','.new_message_item',function(){               
+               var rid = $(this).data('rid');               
+               var username = $(this).data('username');               
+               $.cookie('room_id', rid);
+               $.cookie('username',username)
+               $("#go_message").submit();
+            });
+
+            $(document).on('click','.btn_top_menu_search',function(){               
+               var search_word = $(".search_word").val();
+               if(search_word == "")
+               {
+                  return false;
+               }
+               $.ajax({
+                  url: "{% url 'account:get_searchresult' %}",
+                  method: 'GET',
+                  type: 'json',
+                  data: {search_word:search_word},
+                  success: function(response) 
+                  {
+                     var html = '';   
+                     console.log(response);
+                     var data = response.results;
+                     $(".result_list").html("");
+                     if(data.length>0)
+                     {
+                        for(var i=0;i<data.length;i++)
+                        {
+                           html+=`
+                              <div class="d-flex align-items-center osahan-post-header mb-3 people-list">
+                                 <div class="dropdown-list-image mr-3">
+                                    <img class="rounded-circle" src="${data[i].avatar}">
+                                 </div>
+                                 <div class="font-weight-bold mr-2">
+                                    <div class="text-truncate"><a class="text-blue" href="/user/${data[i].username}">${data[i].firstname}&nbsp;${data[i].lastname}</a></div>
+                                    <div class="small text-gray-500">
+                                    </div>
+                                 </div>                                 
+                              </div>
+                           `;
+                        }
+                     }
+                     else
+                     {
+                        html+=`
+                           <p>
+                              There is no data to match.
+                           </p>
+                        `;
+                     }
+                     $(".result_list").append(html);
+                     $('.search_result_view').removeClass('display_none');
+                  }
+               });               
+            });
+            
+            $(document).on('click','.btn_close_search_result',function(){               
+               $('.search_result_view').addClass('display_none');              
+            });
+            $(document).on('click','.chat_item_view',function(){               
+               var rid = $(this).data('rid');
+               var username = $(this).data('username');
+               $("#room_id_global").val(rid);
+               $.cookie('room_id', rid);  
+               $.cookie('username', username);
+            });
+            
+
+            
+         });
+         
+      </script>
+
+      
+     
+   </body>
+</html>
+
+
+

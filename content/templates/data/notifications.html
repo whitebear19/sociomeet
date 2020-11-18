@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+    <div class="py-4">
+        <div class="container">
+        <div class="row">
+            <!-- Main Content -->
+            <main class="col col-xl-6 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
+                <input type="hidden" class="notification_page" value="1">
+                <div class="box shadow-sm border rounded bg-white mb-3">
+                    <div class="box-title border-bottom p-3">
+                    <h6 class="m-0">Unread</h6>
+                    </div>
+                    <div class="box-body notification_unread custom_scroll p-0">
+                        
+                    </div>
+                </div>
+                <div class="box shadow-sm border rounded bg-white mb-3">
+                    <div class="box-title border-bottom p-3">
+                    <h6 class="m-0">Read</h6>
+                    </div>
+                    <div class="box-body notification_read custom_scroll p-0">
+                                           
+                    </div>
+                </div>
+            </main>
+            <aside class="col col-xl-3 order-xl-1 col-lg-6 order-lg-2 col-md-6 col-sm-6 col-12">
+               
+            </aside>
+            <aside class="col col-xl-3 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-6 col-12">
+               
+            </aside>
+        </div>
+        </div>
+    </div>
+   
+{% endblock %}

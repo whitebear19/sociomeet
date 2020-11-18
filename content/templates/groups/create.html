@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="py-4">
+    <div class="container">
+       <div class="row justify-content-center">
+            
+            
+            <main class="col col-xl-8 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12 pos_rel">
+                
+                {% include "layout/main_sub_menu.html" %}
+                <div class="main_body_left_margin pl-2">               
+                    
+                    <div class="mb-3">
+                        {% include "layout/group/group_searchbox.html" %}
+                    </div>
+
+                    <div class="box mb-3">
+                        <label for="" class="group_title fs-16">Create a Group and Invite People</label>
+                        <div class="border-group_area bg-white">
+                            <form action="" id="form_create_group" method="post">
+                            {% csrf_token %}
+                                <div class="mb-2">
+                                    <label for="" class="text-dark font-weight-bold fs-16">Group Title</label>
+                                    <input type="text" maxlength="60" name="title" class="form-control fs-16 group_title_input">
+                                </div>
+                                <div class="mb-2">
+                                    <label for="" class="text-dark font-weight-bold fs-16">Select background image <span class="ff-roman">(Optional)</span></label>
+                                    <div class="image_upload_preview">
+                                        <label data-toggle="tooltip" data-placement="top" data-original-title="Upload New Picture" class="image_upload_preview_label pos_rel" for="group_img">
+                                            <img src="{% static 'img/camera.png' %}" class="preview_image" alt="">
+                                            <input id="group_img" name="group_img" type="file" accept=".jpg, .jpeg, .png, .gif," class="d-none select_img_preview">
+                                        </label> 
+                                        <button type="button" class="btn_clear_preview btn_transparent">
+                                            <i class="fas fa-times"></i>
+                                        </button>                                       
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="" class="text-dark font-weight-bold fs-16">Invite People</label>
+                                    <div class="mb-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="invite_users" id="all_users" value="1" checked>
+                                            <label class="form-check-label fs-16" for="all_users">
+                                                All My Followers
+                                            </label>
+                                         </div>
+                                    </div>
+                                    <div class="mb-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="invite_users" data-toggle="modal" data-target="#inviteUser" id="custom_users" value="0">
+                                            <label class="form-check-label fs-16" for="custom_users">
+                                                Custom
+                                            </label>
+                                         </div>                                         
+                                    </div>
+                                </div>
+                                
+                            </form>                            
+                        </div>
+                        <div class="mb-2 text-center mt-3">
+                            <button type="button" data-id="3" class="btn btn_green btn_create_group">
+                                Create
+                            </button>
+                        </div>
+                    </div>
+                </div>              
+            </main>
+            <aside class="col col-xl-4 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-6 col-12">                
+                {% include "layout/group/group_list.html" %}
+            </aside>
+        </div>
+    </div>
+</div>
+{% include "layout/modal_invite.html" %}
+
+
+<script>    
+    var invite_user_array = [];
+    $(document).ready(function(){
+        
+        $(document).on('click','.btn_create_group',function(){
+            var title = $(".group_title_input").val();
+            if(title=="")
+            {
+                $(".group_title_input").addClass("alert-border");
+                $(".group_title_input").focus();
+                return false;
+            }
+            invite_user_array = [];
+            
+            var file = document.getElementById('group_img');
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            var formdata = new FormData;
+            if (file.files[0])
+            {
+                if ($.inArray(file.files[0]['name'].split('.').pop().toLowerCase(), fileExtension) == -1) {
+                    alert("Only formats are allowed : "+fileExtension.join(', '));
+                    $("#group_img").val("");
+                    return false;
+                }
+                if(file.files[0].size > 10000000)
+                {
+                    alert("File size should be less than 10Mb.");
+                    return false;
+                }
+                formdata.append('attach',file.files[0]);
+            }
+            var token = '{{csrf_token}}';
+            formdata.append('title',title);
+            formdata.append('invitetype',$("input[name='invite_users']:checked").val());
+
+            $('input[type=checkbox]:checked').each(function() {
+                invite_user_array.push($(this).val());                
+            });            
+            formdata.append('users',invite_user_array);
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url:"{% url 'groups:store_group' %}",
+                type: 'post',
+                dataType: 'json',
+                data: formdata,
+
+                processData: false,
+                contentType: false,
+                success: function(response){                  
+                    $("#loading").css("display","none");
+                    var id = response.id;
+                    if(response.results)
+                    {                        
+                        swal({
+                            title: "Group created successfully!",                            
+                            type: "success"
+                        }).then(function() {
+                            var replace_sub_url = 'detail/'+id;
+                            var cur_url = window.location.href.replace('create', replace_sub_url);                       
+                            window.location.replace(cur_url);
+                        });
+                    }
+                    else
+                    {
+                        swal({
+                            title: "Something wrong!",  
+                            text: "Please try again.",                          
+                            type: "error"
+                        }).then(function() {
+                            location.reload();
+                        });
+                    }                    
+
+                }
+            });
+        });      
+    });
+</script>
+
+{% endblock %}

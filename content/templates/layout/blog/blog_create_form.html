@@ -1,0 +1,70 @@
+{% load static %}
+ <form action="" id="form_create_post" method="post">
+    {% csrf_token %}
+        <ul class="nav nav-justified border-bottom osahan-line-tab" id="myTab" role="tablist">
+            <li class="nav-item" style="display:inherit;">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="" role="tab" aria-controls="home" aria-selected="true"><i class="feather-edit"></i> Share an update</a>
+            </li>                
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="p-3 d-flex align-items-center w-100" href="#">
+                    <div class="dropdown-list-image mr-3">                            
+                        {% if user.avatar == '' %} 
+                            <img class="rounded-circle" src="{% static 'img/user.png' %}">
+                        {% else %}
+                            <img class="rounded-circle" src="{{ user.avatar.url }}">
+                        {% endif %}
+                        <div class="status-indicator bg-success"></div>
+                    </div>
+                    <div class="w-100 pos_rel">
+                        <textarea placeholder="Write your thoughts..." class="form-control border-0 p-0 shadow-none post_content" id="post_content" name="content" rows="3"></textarea>
+                        <span class="cnt_remain">
+                            <span class="cnt_remain_txt">
+                                500
+                            </span> words left
+                        </span>
+                            
+                    </div>
+                </div>
+            </div>            
+        </div>
+        <div class="border-top slider_wrap">
+            <div class="uploaded_files">
+
+            </div>
+            <button type="button" class="btn_transparent btn_slide_arrow slide_arrow_left">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button type="button" class="btn_transparent btn_slide_arrow slide_arrow_right">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        <div class="border-top-blue p-3 d-flex-normal align-items-center">
+            <div class="mr-auto btn_group_area text-center">   
+                <label for="">
+                    Post visible to
+                </label> 
+                <select name="visibleto" class="transparent_back text-blue select_public" id="">
+                    <option value="1">Public</option>
+                    <option value="0">My followers only</option>
+                </select>  
+            </div>
+            <div class="text-center mr-auto">                       
+                <label data-toggle="tooltip" data-placement="top" data-original-title="Upload New Picture" class="border_emojis" for="fileAttachmentBtn">
+                    <i class="feather-image" style="color:#444444;font-size: 24px;"></i> 
+                    <input id="fileAttachmentBtn" name="file-attachment" type="file" accept=".jpg, .jpeg, .png, .gif, .avi, .mp4" class="d-none" multiple>
+                </label>
+                <button class="btn_emojis border_emojis" id="btn_emojis" type="button">
+                    <i class="far fa-smile-beam"></i>
+                </button>               
+                <button class="btn_emojis border_emojis btn_gif_input"  type="button">
+                    <img src="{% static 'img/gif_icon.png' %}" style="width: 24px;margin-top:-4px;" alt="">
+                </button>
+            </div>
+            <div class="flex-shrink-1 add_cancel_btn text-center">                
+                <button type="button" class="btn btn-primary btn-sm btn_store_post">Submit</button>
+            </div>
+        </div>      
+        <input type="hidden" name="post_id" id="post_id">                 
+    </form>

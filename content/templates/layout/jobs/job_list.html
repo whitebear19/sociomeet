@@ -1,0 +1,171 @@
+{% load static %}
+    <div class="job_list">
+        <div class="job_list_view job_list_list job_list_view_selected">
+            
+            
+        </div>
+        <div class="job_list_view job_list_large">
+                       
+        </div>
+        <div class="job_list_view job_list_bar">
+                       
+        </div>
+        <div class="text-center" style="display: none;">
+            <form action="" id="pagination-form" method="get">
+            
+                <ul id="pagination-150" class="Pagination">
+                    <li data-link="1" class="Pagination-item">
+                        <button type="button" class="btn-start btn_pagination_item Pagination-link">
+                        <span>
+                            <i class="fas fa-step-backward"></i>
+                        </span>
+                        </button>
+                    </li>
+                    <li data-link="prev_page" class="Pagination-item">
+                        <button type="button" class="btn-prev btn_pagination_item paginate_button Pagination-link">
+                        <span>
+                            <i class="fas fa-caret-left"></i>
+                        </span>
+                        </button>
+                    </li>
+                    
+                    
+                    <li class="Pagination-item">
+                        <button type="button" class="btn-current-page btn-first btn_pagination_item number Pagination-link is-active"></button> 
+                    </li>
+                    
+                    <li data-link="next_page" class="Pagination-item">
+                        <button type="button" class="btn-next btn_pagination_item Pagination-link">
+                        <span>
+                            <i class="fas fa-caret-right"></i>
+                        </span>
+                        </button>
+                    </li>
+                    <li data-link="last_page" class="Pagination-item">
+                        <button type="button" class="btn-end btn_pagination_item Pagination-link">
+                        <span>
+                            <i class="fas fa-step-forward"></i>
+                        </span>
+                        </button>
+                    </li>
+                </ul>    
+                <input type="hidden" name="currentPage" id="currentPage">                     
+                <input type="hidden" name="where" value="">                     
+                <input type="hidden" name="jobtype" value="">                     
+                <input type="hidden" name="remote" value="">                     
+                <input type="hidden" name="dateposted" value="">                     
+            </form>
+        </div> 
+    </div>
+
+<script>
+    var currentPage = 1;
+    var pagenum = 1;
+    function get_content_list()
+    {
+        $("input[name='where']").val($(".job_page_which").val());
+        $("#loading").css("display","block");        
+        var data = $("#pagination-form").serialize();
+        $.ajax({
+            url: "{% url 'jobs:get_content_list' %}?"+data,
+            method: 'GET',            
+            success: function (response) {                
+                var data = response.results;                
+                $("#loading").css("display","none");                
+                pagenum = response.pagenum;
+                $(".total-page").html(pagenum);                
+                if(data.length>0)
+                {
+                    for(var i=0;i<data.length;i++)
+                    {
+                        var html=`
+                            <div class="job_item_list">
+                                <div class="job_item_img_list">
+                                    <img src="${data[i].avatar}" alt="">
+                                </div>
+                                <div class="mr-auto job_item_content_list">
+                                    <div class="">
+                                        <div class="text-truncate">
+                                            <a href="/job/detail/${data[i].id}" class="text-truncate job_title text-blue">
+                                                ${data[i].title}
+                                            </a>
+                                            <p class="job_location">${data[i].client}, ${data[i].location}</p>
+                                            <p class="mb-0">
+                                                <span class="mr-2">
+                                                    <i class="far fa-dot-circle"></i>
+                                                    <span class="job_date">${data[i].date}</span>
+                                                </span>
+                                                <span class="mr-2">
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                    <span class="job_date">${data[i].location}</span>
+                                                </span>                                                       
+                                                <span class="job_price">$ ${data[i].salary}/${data[i].period}</span>                            
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>                
+                                <div class="job_item_apply_list pos_rel">
+                                    <button class="btn_job_apply list_position">Apply</button>
+                                </div>
+                            </div>
+                        `;
+                        $(".job_list_list").append(html);
+                    }
+                }
+                else
+                {                    
+                    var html="<div class='text-center mt-3'><p>No data to match.</p></div>"
+                    $(".job_list_list").append(html);       
+                }
+            }
+        })
+    }
+    
+    function get_data()
+    {
+        $(".job_list_list").html("");
+        get_content_list();
+    }
+
+    $(document).ready(function(){
+        $(".btn-current-page").html(currentPage);
+        $("#currentPage").val(currentPage);
+        get_content_list();        
+        $(window).scroll(function() {
+            if($(window).scrollTop() + $(window).height() == $(document).height()) {
+                if(currentPage==pagenum)
+                {                        
+                    return false;
+                }
+                currentPage++;
+                $(".btn-current-page").html(currentPage);
+                $("#currentPage").val(currentPage);
+                get_content_list();
+            }
+        });
+
+        $(document).on('click','.dropdown-item-JobType',function(){
+            var value = $(this).data('value');
+            $('.dropdown-item-JobType').removeClass('selected_jobFilter');
+            $("input[name='jobtype']").val(value);
+            $(this).addClass("selected_jobFilter");
+            get_data();
+        });
+
+        $(document).on('click','.dropdown-item-Remote',function(){
+            var value = $(this).data('value');
+            $('.dropdown-item-Remote').removeClass('selected_jobFilter');
+            $("input[name='remote']").val(value);
+            $(this).addClass("selected_jobFilter");
+            get_data();
+        });
+
+        $(document).on('click','.dropdown-item-Date',function(){
+            var value = $(this).data('value');
+            $('.dropdown-item-Date').removeClass('selected_jobFilter');
+            $("input[name='dateposted']").val(value);
+            $(this).addClass("selected_jobFilter");
+            get_data();
+        });
+    });
+</script>

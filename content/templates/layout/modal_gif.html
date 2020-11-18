@@ -1,0 +1,32 @@
+{% load static %}
+<div class="modal fade" id="gifInput" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">  
+                         
+            </div>
+            <div class="modal-body">
+                <div class="custom_scroll text-center gif_wrap_area">
+                    
+                </div>         
+            </div>   
+            <div class="modal-footer">
+                <button type="button" class="btn btn_cancel btn_cancel_invite" data-dismiss="modal">Close</button>                
+            </div>               
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        for(var i=1;i<94;i++)
+        {
+            var html = `
+                <div class="gif_item_warp">
+                    <img src="/media/gif/gif${i}.gif" class="gif_item_img" data-name="gif${i}.gif" alt="">
+                </div>
+            `;
+            $(".gif_wrap_area").append(html);
+        }
+       
+    });
+</script>

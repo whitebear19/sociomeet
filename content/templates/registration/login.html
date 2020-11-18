@@ -1,0 +1,175 @@
+
+{% extends 'authroot.html' %}
+{% load static %}
+{% block content %}
+
+    
+    <div class="col-md-4">
+        <div class="osahan-login py-4">
+            <div class="text-center mb-4">                    
+                <h5 class="font-weight-bold mt-3 auth_title">Welcome Back</h5>                
+            </div>
+            <form action="" id="form_login"  method="POST">
+            {% csrf_token %}
+                <div class="form-group">
+                    <label class="mb-1">Email or Phone</label>
+                    <div class="position-relative icon-form-control">
+                        <i class="feather-user position-absolute"></i>
+                        <input type="text" name="email" placeholder="Enter registered email or phone" class="form-control required">                   
+                    </div>
+                    <p class="alert_both alert_txt">Invalid data. Please try again.</p>
+                    <p class="alert_phone alert_txt">Invalid data. Please try again.</p>
+                </div>
+                <div class="form-group">
+                    <label class="mb-1">Password</label>
+                    <div class="position-relative icon-form-control">
+                        <i class="feather-unlock position-absolute"></i>
+                        <input type="password" name="password" placeholder="Enter your password" class="input_login form-control required">
+                    </div>
+                    <p class="alert_passmatch alert_txt">The password dont match.</p>
+                </div>
+                <!-- {{form.as_p}} -->
+                <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                    <label class="custom-control-label" for="customCheck1">Remember password</label>
+                </div>
+                <button class="btn btn-primary btn-block text-uppercase btn_login" type="button"> Sign in </button>
+                <input type="hidden" value="" name="which">
+            </form> 
+            
+            <div class="text-center mt-3 border-bottom pb-3">
+                <p class="small text-muted">Or login with</p>
+                <div class="row">
+                <div class="col-4">
+                    <button type="button" class="btn btn-sm btn-outline-instagram btn-block"><i class="feather-instagram"></i> Instagram</button>
+                </div>
+                <div class="col-4">
+                    <button type="button" class="btn btn-sm btn-outline-linkedin btn-block"><i class="feather-linkedin"></i> Linkedin</button>
+                </div>
+                <div class="col-4">
+                    <button type="button" class="btn btn-sm btn-outline-facebook btn-block"><i class="feather-facebook"></i> Facebook</button>
+                </div>
+                </div>
+            </div>
+            <div class="py-3 d-flex align-item-center">
+                <a href="/password_reset">Forgot password?</a>
+                <span class="ml-auto"> New user? <a class="font-weight-bold" href="{% url 'register' %}">Join now</a></span>
+            </div>            
+        </div>
+    </div>
+    <script>
+        function isEmail(email) {
+            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            return regex.test(email);
+        }
+        function isNumber(phone) {
+            var regex = /^([0-9])/;
+            return regex.test(phone);
+        }
+        function login()
+        {
+            $('input[name="which"]').val('');            
+            var checkvalid = true;       
+            $(".required").each(function(){
+                if($(this).val() == "")
+                {                        
+                    $(this).addClass('alertborder');
+                    checkvalid = false;
+                }
+            });
+            
+            var is_email = isEmail($('input[name="email"]').val());
+            var is_phone = isNumber($('input[name="email"]').val());
+            
+            if(is_phone)
+            {
+                $('input[name="which"]').val('phone');
+            }
+            else if(is_email)
+            {
+                $('input[name="which"]').val('email');
+            }
+            else
+            {                    
+                $(".alert_both").css('display','block');
+                return false;
+            }
+            var password = $('input[name="password"]').val();                 
+            
+            if(password =="")
+            {                                       
+                return false;
+            }
+            else
+            {
+                if(password.length < 8)
+                {
+                    alert("The password must be 8 or more characters.");
+                    return false;
+                }                    
+            }
+            
+            
+            if(checkvalid)
+            {                    
+                $("#loading").css("display",'block');
+                var data = $('#form_login').serialize();
+                $.ajax({
+                    url: "{% url 'account:check_login' %}",
+                    method: 'POST', 
+                    type: 'json',
+                    data: data,           
+                    success: function (response) 
+                    {  
+                        $("#loading").css("display",'none');
+                        var data = response.results;         
+                        console.log(data);                  
+                        if(data.is_phone == '1' || data.is_email == '1')
+                        {           
+                            if(data.is_pass == '0')
+                            {
+                                $(".alert_passmatch").css('display','block');
+                            }   
+                            else
+                            {
+                                var cur_url = window.location.href.replace('login/', 'dashboard');                       
+                                window.location.replace(cur_url);    
+                            }                  
+                                                        
+                        }
+                        else
+                        {                                
+                            $(".alert_phone").css('display','block'); 
+                        }
+                    }
+                });
+            }
+            else
+            {
+                return false;
+            }
+        }
+        $(document).ready(function(){
+            $(document).on('click','input[name="email"]',function(){
+                $(".alert_txt").css("display","none");
+            });
+            $(document).on('click','.btn_login',function()
+            {                     
+                login();
+            });
+            
+            $(document).on('keyup','.input_login',function(e){
+                if(e.which == 13) {
+                    login();
+                }                
+            });
+            $(document).on('keyup','.alertborder',function(){
+                $(this).removeClass('alertborder');
+            });
+            $(document).on('keyup','.required',function(){
+                $(this).parent().parent().find('p').css('display','none');
+            });
+            
+        });
+    </script>
+{% endblock %}

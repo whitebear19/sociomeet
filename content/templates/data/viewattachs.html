@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+{% load static %}
+    <div class="py-1 bg-primary">
+        <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <h1 class="text-white font-weight-light text-center"><span class="font-weight-bold fs-24">{{ user.first_name }}'s Gallary</span></h1>               
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="py-5">
+        <div class="container">
+        <div class="row">
+            <div class="col-md-12 mx-auto text-center">
+                <ul class="wrap_all_attachs">
+                   
+                </ul>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script>
+        var currentPage = 1;
+        var pagenum = 1;
+        var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp','avi','mp4'];
+        var imgExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+        var videoExtension = ['avi','mp4'];
+        
+        function get_attachs()
+        {
+            $("#loading").css("display","block");        
+            var data = $("#pagination-form").serialize();
+            $.ajax({
+                url: "{% url 'account:get_attachs' %}?"+data,
+                method: 'GET',            
+                success: function (response) {
+                    
+                    var data = response.results;
+                    $(".post_list").html('');
+                    $("#loading").css("display","none");
+                    
+                    if(data.length>0)
+                    {
+                        for(var i=0;i<data.length;i++)
+                        {
+                            let html = '<li><div class="attach_item pos_rel">';
+                            if ($.inArray(data[i].ext, imgExtension) == -1) {
+                                html += '<video src="media/'+data[i].attach+'" controls></video>';
+                            }
+                            else
+                            {
+                                html += '<img src="media/'+data[i].attach+'" alt="">';
+                            }
+                            html += `
+                                        <button type="button" data-id="${data[i].id}" class="btn_trash_attach"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                </li>`;                            
+                            $('.wrap_all_attachs').append(html);
+                        }
+                    }                    
+                }
+            })
+        }
+
+        $(document).ready(function(){
+            get_attachs();
+            $(document).on('click','.btn_trash_attach',function()
+            {            
+                var id = $(this).data('id');
+                
+                $.ajax({
+                    url: "{% url 'blog:delete_attach' %}",
+                    method: 'GET', 
+                    type: 'json',
+                    data: {id:id},           
+                    success: function (response) {
+                        if(response)
+                        {
+                            location.reload();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

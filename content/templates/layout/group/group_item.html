@@ -1,0 +1,57 @@
+{% load static %}
+<div class="d-flex align-items-center osahan-post-header mb-3 people-list">
+    <div class="group_item_img mr-3">
+        <img class="rounded-circle" src="{{ item.avatar }}">
+    </div>
+    <div class="font-weight-bold mr-2">
+        <div class="text-truncate">
+            <a class="text-blue group_item_title" href="{% url 'groups:view_group_detail' item.id %}">{{ item.title }}</a>
+        </div>
+        <div class="">            
+            <button class="mr-3 btn_transparent btn_group_follow" data-id="{{ item.id }}">
+                <i class="fas fa-users"></i>&nbsp;
+                <span class="followers">{{ item.followers }}</span>
+                <label class="group_text_content">
+                    Followers
+                </label>
+            </button>
+            <span>
+                <i class="far fa-edit"></i>
+                <span class="group_text_content mr-3">
+                    {{ item.posts }} Posts
+                </span>
+            </span>
+           
+            <button class="mr-3 btn_transparent btn_group_like" data-id="{{ item.id }}">
+                {% if item.liked == '1' %}
+                    <i class="fas fa-heart text-danger mr-1"></i>
+                {% else %}
+                    <i class="far fa-heart text-danger mr-1"></i>
+                {% endif %}
+                <span class="likes">{{ item.likes }}</span>
+                <label class="group_text_content">
+                    Likes
+                </label>
+            </button>
+
+            <span>
+                <i class="fas fa-eye text-success"></i>
+                <span class="group_text_content mr-3">
+                    {{ item.views }} Views
+                </span>
+            </span>
+            
+        </div>
+    </div>
+    <span class="ml-auto">
+        {% if item.me == '1' %}
+            <button type="button" data-id="{{ item.id }}" class="btn btn_invite btn_green">
+                <i class="fas fa-plus"></i> INVITE
+            </button>
+        {% else %}
+            <button type="button" data-id="{{ item.id }}" class="btn btn_blue btn_group_follow">
+                {{ item.followtxt }}
+            </button>            
+        {% endif %}
+    </span>
+</div>

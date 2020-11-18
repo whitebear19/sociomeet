@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+{% load static %}
+    <div class="py-1 bg-primary">
+        <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <h1 class="text-white font-weight-light text-center"><span class="font-weight-bold fs-24">{{ user.first_name }}'s Connections</span></h1>               
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="py-5">
+        <div class="container">
+        <div class="row">
+            <div class="col-md-12 mx-auto text-center">
+                <div class="connection_header">
+                    <ul>
+                        <li>
+                            <button type="button" data-id="following" class="btn_follow_which btn_followers {% if which == 'following' %} selected_follow {% endif %}">
+                                Following
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" data-id="followers" class="btn_follow_which btn_following {% if which == 'followers' %} selected_follow {% endif %}">
+                                Followers
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+               
+                <br>
+                <div class="follow_list_area">
+                    
+                    <div class="following_list follow_list {% if which == 'following' %} selected_list {% endif %}">
+                        {% if following %}
+                            {% for item in following %}
+                                <div class="d-flex align-items-center osahan-post-header mb-3 people-list">
+                                    <div class="dropdown-list-image mr-3">                            
+                                        {% if item.avatar == '' %} 
+                                            <img class="rounded-circle" src="{% static 'img/user.png' %}">
+                                        {% else %}
+                                            <img class="rounded-circle" src="{{ item.avatar }}">
+                                        {% endif %}
+                                        
+                                    </div>
+                                    <div class="font-weight-bold mr-2">
+                                        <div class="text-truncate"><a href="{% url 'account:view_user_profile' item.username %}">{{ item.firstname }} {{ item.lastname }}</a></div>
+                                        <div class="small text-gray-500">
+                                        </div>
+                                    </div>
+                                    <span class="ml-auto">
+                                         <button type="button" data-id="{{ item.id }}" class="btn btn-light btn-sm btn_connection">
+                                            {% if item.followed == '1' %}Following{% else %}Follow{% endif %}
+                                        </button>
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                                <div>
+                                    <p>There is no any data</p>
+                                </div>
+                        {% endif %}          
+                    </div>  
+                         
+                    <div class="followers_list follow_list {% if which == 'followers' %} selected_list {% endif %}">
+                        {% if followers %}
+                            {% for item in followers %}
+                                <div class="d-flex align-items-center osahan-post-header mb-3 people-list">
+                                    <div class="dropdown-list-image mr-3">                            
+                                        {% if item.avatar == '' %} 
+                                            <img class="rounded-circle" src="{% static 'img/user.png' %}">
+                                        {% else %}
+                                            <img class="rounded-circle" src="{{ item.avatar }}">
+                                        {% endif %}
+                                        
+                                    </div>
+                                    <div class="font-weight-bold mr-2">
+                                        <div class="text-truncate"><a href="{% url 'account:view_user_profile' item.username %}">{{ item.firstname }} {{ item.lastname }}</a></div>
+                                        <div class="small text-gray-500">
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                                <div>
+                                    <p>There is no any data</p>
+                                </div>
+                        {% endif %}          
+                    </div>  
+
+                </div>
+                
+            </div>
+        </div>
+        </div>
+    </div>
+    <script>      
+        
+        function get_connections()
+        {
+            $("#loading").css("display","block");        
+            var data = $("#pagination-form").serialize();
+            $.ajax({
+                url: "{% url 'account:get_attachs' %}?"+data,
+                method: 'GET',            
+                success: function (response) {
+                    console.log(response)
+                    var data = response.results;
+                    $(".post_list").html('');
+                    $("#loading").css("display","none");
+                    console.log(data);
+                    if(data.length>0)
+                    {
+                        for(var i=0;i<data.length;i++)
+                        {
+                            let html = '<li><div class="attach_item">';
+                            if ($.inArray(data[i].ext, imgExtension) == -1) {
+                                html += '<video src="media/'+data[i].attach+'" controls></video>';
+                            }
+                            else
+                            {
+                                html += '<img src="media/'+data[i].attach+'" alt="">';
+                            }
+                            html += '</div></li>';
+                            
+                            $('.wrap_all_attachs').append(html);
+                        }
+                    }                    
+                }
+            })
+        }
+
+        $(document).ready(function(){
+            $(document).on('click','.btn_follow_which',function(){
+                $('.btn_follow_which').removeClass("selected_follow");
+                $('.follow_list').removeClass("selected_list");
+                var which = $(this).data('id');
+                $(this).addClass("selected_follow");
+                $("."+which+"_list").addClass("selected_list");
+            });
+
+            
+        });
+    </script>
+{% endblock %}

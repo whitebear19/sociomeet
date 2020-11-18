@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="py-4">
+    <div class="container">
+       <div class="row justify-content-center">
+            
+            
+            <main class="col col-xl-8 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12 pos_rel">
+                
+                {% include "layout/main_sub_menu.html" %}
+                <div class="main_body_left_margin pl-2">               
+                    
+                    <div class="mb-3">
+                        {% include "layout/jobs/job_searchbox.html" %}
+                    </div>
+                    <div class="box mb-3">
+                        {% include "layout/jobs/job_filter.html" %}
+                    </div>
+                    <div class="box mb-3">                       
+                       {% include "layout/jobs/job_list.html" %}
+                    </div>
+                    <input type="hidden" class="job_page_which" value="0">
+                </div>              
+            </main>
+            <aside class="col col-xl-4 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-6 col-12">                
+                {% include "layout/jobs/recent_jobs.html" %}  
+            </aside>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp','avi','mp4'];
+    var imgExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+    var videoExtension = ['avi','mp4'];
+    var max_file_number = 10;
+    var item_width = 160;
+    var curSlidePos = 0;
+    var slideLeft = 0
+    var cur_user_avatar_url = '';
+    var cur_user_full_name = '';
+    var max_cnt = 500;
+    var where = '';
+    var is_mobile = false;
+   
+
+    $(document).ready(function(){
+        // -------set_follow_part
+        $(document).on('click','.btn_group_follow',function(){
+            var id = $(this).data('id');
+            if(id=="")
+            {               
+                return false;
+            }
+            
+            var formdata = new FormData;            
+            var token = '{{csrf_token}}';
+            formdata.append('id',id); 
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url:"{% url 'groups:set_followgroup' %}",
+                type: 'post',
+                dataType: 'json',
+                data: formdata,
+
+                processData: false,
+                contentType: false,
+                success: function(response){                  
+                    $("#loading").css("display","none");
+                    if(response.results)
+                    { 
+                        location.reload();
+                    }
+                    else
+                    {
+                        swal({
+                            title: "Something wrong!",  
+                            text: "Please try again.",                          
+                            type: "error"
+                        }).then(function() {
+                            location.reload();
+                        });
+                    }                    
+
+                }
+            });
+        });  
+        // -------set_follow_part--------end
+    });
+</script>
+
+{% endblock %}

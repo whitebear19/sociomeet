@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+{% load static %}
+    <div class="py-4">
+        <div class="container">
+        <div class="row">
+            <!-- Main Content -->
+            <main class="col col-xl-9 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
+                <div class="box shadow-sm rounded bg-white mb-3 osahan-chat">
+                    <h5 class="pl-3 pt-3 pr-3 border-bottom mb-0 pb-3">Messaging</h5>
+                    <div class="row m-0">
+                    <div class="border-right col-lg-5 col-xl-4 px-0">
+                        <div class="osahan-chat-left">
+                            <div class="position-relative icon-form-control p-3 border-bottom">
+                                <i class="feather-search position-absolute"></i>
+                                <input placeholder="Search messages" type="text" class="form-control">
+                            </div>
+                            <div class="chat_class">
+                                <ul>
+                                    <li class="select_room selectednav" data-id="chat_active">Active</li>
+                                    <li class="select_room" data-id="chat_history">History</li>
+                                </ul>
+                                <div style="clear: both;">
+
+                                </div>
+                            </div>
+                            <div class="osahan-chat-list">                                
+                                <div class="contact_list_global_body">
+                                    <ul class="contact_list common_display chat_active">
+                                    </ul>
+                                    <ul class="history_list common_display chat_history display_none">
+                              
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-xl-8 px-0">
+                        <div class="p-3 d-flex align-items-center  border-bottom osahan-post-header">
+                            <div class="font-weight-bold mr-1 overflow-hidden">
+                                <div class="text-truncate chat_box_username chat_box_username_message">
+                                </div>
+                                <div class="small text-truncate overflow-hidden text-black-50"></div>
+                            </div>
+                            <span class="ml-auto">
+                                
+                                <div class="btn-group">
+                                <button type="button" class="btn btn-light btn-sm rounded" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="feather-more-vertical"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <button class="dropdown-item" type="button"><i class="feather-trash"></i> Delete</button>
+                                    <button class="dropdown-item" type="button"><i class="feather-x-circle"></i> Turn Off</button>
+                                </div>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="chat_item_view_body chat_item_view_body_message osahan-chat-box p-3 border-top border-bottom bg-light">
+                            <ul class="chat_item_content chat_item_content_message">
+                
+                            </ul>                                
+                        </div>
+
+                        <div class="w-100 border-top border-bottom">
+                            <textarea placeholder="Write a message…" class="form-control border-0 p-3 shadow-none send_message send_message_global send_message_global_message" rows="2"></textarea>
+                        </div>
+                        <div class="p-3 d-flex align-items-center">
+                            <div class="overflow-hidden">
+                               
+                            </div>
+                            <span class="ml-auto">
+                            <button type="button" class="btn btn-primary btn-sm rounded btn_send">
+                            <i class="feather-send"></i> Send
+                            </button>
+                            </span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </main>
+            <aside class="col col-xl-3 order-xl-2 col-lg-12 order-lg-2 col-12">
+                {% include "layout/user_list.html" %}         
+            </aside>
+        </div>
+        </div>
+        <input type="hidden" id="room_id" value="">
+        
+        
+    </div>
+    <script>
+        var user_avatar = '';
+        var user_name = '';
+               
+        function init_page()
+        {
+            $("#page_where").val('message');
+            $(".chat_item_view").html("");
+            $(".contact_list_global").html("");
+        }
+        $(document).ready(function(){
+            init_page();   
+            $(document).on('click','.select_room',function(){
+                var selected = $(this).data('id');
+                
+                $('.common_display').css('display','none');
+                $('.select_room').removeClass('selectednav');
+                $(this).addClass('selectednav');
+                $("."+selected).css('display','block');
+                $('.send_message_global').val('');
+                if(selected=="chat_history")
+                {
+                    $('.send_message_global').prop('disabled', true);
+                }
+                else
+                {
+                    $('.send_message_global').prop('disabled', false);
+                }           
+                
+            });       
+        });
+    </script>
+{% endblock %}

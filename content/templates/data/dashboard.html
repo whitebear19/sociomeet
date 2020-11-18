@@ -1,0 +1,498 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="py-4">
+    <div class="container">
+       <div class="row justify-content-center">
+            
+            
+            <main class="col col-xl-8 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12 pos_rel">
+                
+                {% include "layout/main_sub_menu.html" %}
+                <div class="main_body_left_margin">               
+                    {% include "layout/profile_info_new.html" %}
+                    <div class="box shadow-sm bg-newpost rounded bg-white mb-3 osahan-share-post">
+                        {% include "layout/blog/blog_create_form.html" %}                       
+                    </div>
+                    <div>
+                        
+                        <div class="post_list">
+                            
+                        </div>                    
+                        
+                    </div>
+                    <div class="text-center" style="display: none;">
+                        <form action="" id="pagination-form" method="get">
+                        
+                            <ul id="pagination-150" class="Pagination">
+                                <li data-link="1" class="Pagination-item">
+                                    <button type="button" class="btn-start btn_pagination_item Pagination-link">
+                                    <span>
+                                        <i class="fas fa-step-backward"></i>
+                                    </span>
+                                    </button>
+                                </li>
+                                <li data-link="prev_page" class="Pagination-item">
+                                    <button type="button" class="btn-prev btn_pagination_item paginate_button Pagination-link">
+                                    <span>
+                                        <i class="fas fa-caret-left"></i>
+                                    </span>
+                                    </button>
+                                </li>
+                                
+                                
+                                <li class="Pagination-item">
+                                    <button type="button" class="btn-current-page btn-first btn_pagination_item number Pagination-link is-active"></button> 
+                                </li>
+                                
+                                <li data-link="next_page" class="Pagination-item">
+                                    <button type="button" class="btn-next btn_pagination_item Pagination-link">
+                                    <span>
+                                        <i class="fas fa-caret-right"></i>
+                                    </span>
+                                    </button>
+                                </li>
+                                <li data-link="last_page" class="Pagination-item">
+                                    <button type="button" class="btn-end btn_pagination_item Pagination-link">
+                                    <span>
+                                        <i class="fas fa-step-forward"></i>
+                                    </span>
+                                    </button>
+                                </li>
+                            </ul>
+                            <input type="hidden" name="currentPage" id="currentPage">     
+                            <input type="hidden" name="where" value="dashboardpage">    
+                            <input type="hidden" name="user_id" value="">               
+                        </form>
+                    </div> 
+                </div>              
+            </main>
+            <aside class="col col-xl-4 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-6 col-12">
+                {% include "layout/user_following.html" %}
+                {% include "layout/user_list.html" %}
+                
+                {% include "layout/user_attaches.html" %}
+                
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% include "layout/editmodal.html" %}
+{% include "layout/modal_gif.html" %}
+<script>
+    var currentPage = 1;
+    var pagenum = 1;
+
+    var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp','avi','mp4'];
+    var imgExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+    var videoExtension = ['avi','mp4'];
+    var max_file_number = 10;
+    var item_width = 160;
+    var curSlidePos = 0;
+    var slideLeft = 0
+    var cur_user_avatar_url = '';
+    var cur_user_full_name = '';
+    var max_cnt = 500;
+    var where = '';
+    var is_mobile = false;
+    
+    function get_content_list()
+    {
+        $("#loading").css("display","block");        
+        var data = $("#pagination-form").serialize();
+        $.ajax({
+            url: "{% url 'blog:get_content_list' %}?"+data,
+            method: 'GET',            
+            success: function (response) {                
+                var data = response.results;                
+                $("#loading").css("display","none");                
+                pagenum = response.pagenum;
+                $(".total-page").html(pagenum);
+                if(data.length>0)
+                {
+                    for(var i=0;i<data.length;i++)
+                    {
+                        var html = '<div data-pid="'+data[i].post_id+'" class="post_item_view post_item_'+data[i].post_id+' box shadow-sm border rounded bg-white mb-3 osahan-post"><div class="p-3 d-flex align-items-center border-bottom osahan-post-header pos_rel"><div class="dropdown-list-image mr-3"><img class="rounded-circle" src="/media/'+data[i].avatar+'" alt=""></div><div class="font-weight-bold mr-auto"><div class="text-truncate"><a class="text-blue font-weight-bold" href="/user/'+data[i].username+'">'+data[i].fullname+'</a></div><div class="small text-gray-500"></div></div>';
+                                                   
+                            html += `
+                                <div class="dropdown">
+                                    <label><span class="ml-auto small ">${data[i].created_at}</span> ago</label>`;
+                                    if(data[i].me == '1')
+                                    { 
+                                    html +=  `<button class="btn btn_dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown_custom_position"> 
+                                        <button data-id="${data[i].post_id}" class="btn_transparent dropdown-item btn_edit_post"><i class="far fa-edit"></i> Edit</button>
+                                        <button data-id="${data[i].post_id}" class="btn_transparent dropdown-item btn_delete_post"><i class="far fa-trash-alt"></i> Delete</button>
+                                        <button data-id="${data[i].post_id}" class="btn_transparent dropdown-item btn_hide_post btn_hide_post_${data[i].post_id}"><i class="fas fa-times"></i> `;
+                                        if(data[i].public == "1")
+                                        {
+                                            html+=`Hide from public`;
+                                        }
+                                        else
+                                        {
+                                            html+=`Show to public`;
+                                        }
+                                        
+                                html+=` </button>
+                                    </div>`;
+                                    }
+                                
+                           
+                        html +=`</div></div><div class="p-3 border-bottom osahan-post-body"><span class="post_text_limit post_content_text mb-0 post_content_${data[i].post_id}">${data[i].content}</span>`;
+                        if(data[i].content.length > 250)
+                        {
+                            html+=`                                
+                                <button class="btn_transparent btn_show_more_content" data-id="${data[i].post_id}">
+                                    read more
+                                </button>                                
+                            `;
+                        }            
+                        html +=`<div>`;
+                        
+                        if(data[i].attach.length > 0)
+                        {
+                            var subhtml = '';
+                            var attachs = data[i].attach;
+                            subhtml += `
+                                <section class="regular slider mt-3">                                    
+                            `;                                
+
+                            for(var j=0;j<attachs.length;j++)
+                            {                                
+                                var fileExt = attachs[j].split(".")[1];
+                                
+                                if ($.inArray(fileExt, imgExtension) == -1) {
+                                    subhtml += '<div class="attach_slider_item"><div class="warp_attach"><video class="attached_item_view attached_item_'+data[i].post_id+'" data-url="'+attachs[j]+'" src="/media/'+attachs[j]+'" controls></video></div></div>';
+                                }
+                                else
+                                {
+                                    subhtml += '<div class="attach_slider_item"><div class="warp_attach"><img class="attached_item_view attached_item_'+data[i].post_id+'" data-url="'+attachs[j]+'" src="/media/'+attachs[j]+'" alt=""></div></div>';
+                                }
+                               
+                            }
+                            subhtml += `
+                                </section>
+                            `;
+                            html += subhtml;
+                        }
+
+                        html +='</div></div><div class="p-3 border-bottom osahan-post-footer"><button class="mr-4 text-secondary btn_transparent btn_like" data-id="'+data[i].post_id+'">';
+                        if(data[i].liked == '0')
+                        {
+                            html += '<i class="far fa-heart text-danger"></i>';
+                        }
+                        else
+                        {
+                            html += '<i class="fas fa-heart text-danger"></i>';
+                        }
+                        html +='&nbsp;<span class="likes">'+data[i].likes+'</span><label class="ml-1">LIKES</label></button><button type="button" data-id="'+data[i].post_id+'" class="mr-4 text-secondary btn_transparent btn_viewcomment"><i class="fas fa-comment-alt text-blue"></i>&nbsp;<span class="cnt_comment_'+data[i].post_id+'">'+data[i].comments+'</span><label class="ml-1">COMMENTS</label></button><label class="mr-4"><i class="fas fa-eye text-success"></i>&nbsp;<span class="">'+data[i].views+'</span><label class="ml-1">VIEWS</label></label><label class="mr-4"><i class="fas fa-share-alt"></i>&nbsp;<span class="">0</span><label class="ml-1">SHARES</label></label>';
+                        html +=`
+                        <div class="comment_area">
+                            <div class="p-3 auto_comment_area">
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Awesome!!">Awesome!!</button>
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Nice pics!">Nice pics!</button>
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Congrats!">Congrats!</button>  
+                                </div>
+                                <div class="auto_comment_area_item">   
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Good Looking!">Good Looking!</button>
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="How are you?">How are you?</button>
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Where are you?">Where are you?</button>                           
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Excellent!">Excellent!</button>                           
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Helpful information!">Helpful information!</button>                           
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Please most more information">Please most more information</button>                           
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="I am interested">I am interested</button>                           
+                                </div>                                
+                            </div>  
+                            <div class="p-3 d-flex align-items-center w-100">
+                                <div class="dropdown-list-image mr-3">
+                                    <img class="rounded-circle" src="${cur_user_avatar_url}"> 
+                                </div>
+                                <div class="w-100 pos_rel">
+                                    <textarea placeholder="Write a comment" class="form-control comment_content_txt shadow-none comment_content_txt_${data[i].post_id}" rows="1" name="content"></textarea>
+                                    <button type="button" class="btn_store_comment" data-pid="${data[i].post_id}">
+                                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                                    </button>                                   
+                                </div>
+                            </div>                          
+                            <div class="comment_content display_closed comment_content_${data[i].post_id}">
+                                <div class="added_comment_${data[i].post_id}">  
+                                        
+                                </div>
+                                <div class="added_comment_action py-1 d-flex">
+                                    <button class="btn_transparent display_none mr-auto btn_view_more btn_view_more_${data[i].post_id}" data-pid="${data[i].post_id}">View More Comments</button>
+                                    <label class="total_cnt_comments total_cnt_comments_${data[i].post_id}">
+                                        
+                                    </label>
+                                </div>
+                            </div>
+                        </div></div></div>`;
+                        $('.post_list').append(html);
+                    }  
+                    
+                    
+                    $(".regular").each(function(){
+                        if (!$(this).hasClass('slick-initialized')) 
+                        {
+                            $(this).slick({
+                                dots: true,
+                                infinite: true,
+                                slidesToShow: 1,
+                                slidesToScroll: 1,                     
+                                responsive: [ 
+                                ]
+                            });
+                        }  
+                    });                  
+                    $(".auto_comment_area").each(function(){
+                        if (!$(this).hasClass('slick-initialized')) 
+                        {
+                            $(this).slick({
+                                dots: false,
+                                infinite: true,
+                                speed: 300,
+                                slidesToShow: 1,
+                                centerMode: true,
+                                variableWidth: true                     
+                                
+                            });
+                        }  
+                    });                    
+                }
+                else
+                {
+                    $(".total-page").css('display','none');
+                    $("#pagination-form").css('display','none');                    
+                }
+            }
+        })
+    }
+
+
+    $(document).ready(function(){
+        $(".btn-current-page").html(currentPage);
+        $("#currentPage").val(currentPage);
+        $(".total-page").html(pagenum);
+        if ($(window).width() <= 600)
+        { 
+            is_mobile = true;
+        }
+        else
+        {
+            is_mobile = false;
+        }        
+        get_content_list();
+
+        cur_user_avatar_url = $('.cur_user_avatar_url').prop('src');
+        cur_user_full_name = $(".user_full_name").html();
+        where = $("input[name='where']").val();
+
+        $("#fileAttachmentBtn").change(function() 
+        {
+            var file = document.getElementById('fileAttachmentBtn');
+            var cur_file_number = 0; 
+            var available_number = 0;
+            $(".uploaded_files_item").each(function(){
+                cur_file_number++;
+            })
+            available_number = max_file_number - cur_file_number;
+            var total_file_num = 0;
+            var temp_con = 0;
+            total_file_num = this.files.length;
+            if(total_file_num > available_number)
+            {
+                if(available_number < 1)
+                {
+                    alert("Maximum 10 files allowed !");                    
+                }
+                else
+                {
+                    alert("You can upload maximum "+ available_number +" files!");
+                }
+                
+                return false;
+            }
+            for (let index = 0; index < this.files.length; index++) {
+
+                if (this.files && this.files[index]) 
+                {   
+                    if(this.files[index].size > 500000000)
+                    {
+                        alert("File size should not exceed 2mb !");
+                        return false;
+                    }
+                }
+            }            
+            
+            $("#loading").css("display","block");
+            for (let index = 0; index < this.files.length; index++) {
+
+                if (this.files && this.files[index]) 
+                {                    
+                    if ($.inArray(this.files[index]['name'].split('.').pop().toLowerCase(), fileExtension) == -1) {
+                        alert("Only formats are allowed : "+fileExtension.join(', '));
+                        $("#fileAttachmentBtn").val("");
+                        $("#loading").css("display","none");
+                        return false;
+                    }
+                    if(this.files[index].size > 500000000)
+                    {
+                        alert("File size should be less than 2Mb.");
+                        $("#loading").css("display","none");
+                        return false;
+                    }
+                    $('.slider_wrap').css('display','block');
+                    var formdata = new FormData;
+            
+                    var token = '{{csrf_token}}';
+                    formdata.append('attach',file.files[index]);
+                    
+                    $.ajax({
+                        headers: { "X-CSRFToken": token },
+                        url:"{% url 'blog:store_postattach' %}",
+                        type: 'post',
+                        dataType: 'json',
+                        data: formdata,
+
+                        processData: false,
+                        contentType: false,
+                        success: function(result){    
+                            var data = result.attachname     
+                            var fileExt = data.split(".")[1];
+                            let html = '<div class="uploaded_files_item">';
+                            if ($.inArray(fileExt, imgExtension) == -1) {
+                                html += '<video src="/media/'+data+'" controls></video>';
+                            }
+                            else
+                            {
+                                html += '<img src="/media/'+data+'" alt="">';
+                            }
+                            html += '<button class="btn_transparent btn_delete_uploadedFile"><svg style="width:15px;height:15px;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" class="svg-inline--fa fa-times fa-w-11 fa-3x"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z" class=""></path></svg></button><input type="hidden" name="attachname[]" value="'+data+'"></div>';
+                            
+                            $('.uploaded_files').append(html);
+                        }
+                    });               
+                }
+            }
+            $("#loading").css("display","none");
+        }); 
+ 
+            
+        $(document).on('click','.slide_arrow_left',function(){
+
+           
+            var cur_file_number = 0; 
+            $(".uploaded_files_item").each(function(){
+                cur_file_number++;
+            })
+            var cur_width = $('.slider_wrap').width();        
+            var remainWidth = (cur_file_number - curSlidePos)*item_width;
+            
+            if(remainWidth < cur_width)
+            {                
+                if((cur_width-remainWidth) >= item_width)
+                {
+                    return false;
+                } 
+            }
+            curSlidePos = curSlidePos + 1;
+            img_slider()
+            
+        });
+
+        $(document).on('click','.slide_arrow_right',function(){   
+            if(curSlidePos < 1)
+            {
+                curSlidePos = 0;
+                return false;
+            }         
+            else
+            {
+                curSlidePos = curSlidePos - 1;
+                img_slider();
+            }
+            
+        });
+        
+        
+
+
+        $(window).scroll(function() {
+            if($(window).scrollTop() + $(window).height() == $(document).height()) {
+                if(currentPage==pagenum)
+                {                        
+                    return false;
+                }
+                currentPage++;
+                $(".btn-current-page").html(currentPage);
+                $("#currentPage").val(currentPage);
+                get_content_list();
+            }
+         });
+         
+    
+        $(document).on('change','#editUserAvatar',function(){
+            var file = document.getElementById('editUserAvatar');
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            var formdata = new FormData;
+            if (file.files[0])
+            {
+                if ($.inArray(file.files[0]['name'].split('.').pop().toLowerCase(), fileExtension) == -1) {
+                    alert("Only formats are allowed : "+fileExtension.join(', '));
+                    $("#editUserAvatar").val("");
+                    return false;
+                }
+                if(file.files[0].size > 500000000)
+                {
+                    alert("File size should be less than 2Mb.");
+                    return false;
+                }
+                formdata.append('attach',file.files[0]);
+            }
+            var token = '{{csrf_token}}';
+            formdata.append('is_store','1');
+            $("#loading").css("display","block");
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url:"{% url 'account:upload_avatar' %}",
+                type: 'post',
+                dataType: 'json',
+                data: formdata,
+
+                processData: false,
+                contentType: false,
+                success: function(result){                  
+                    location.reload();
+                }
+            });
+        });
+    
+
+        
+
+       
+        
+    });
+</script>
+
+{% endblock %}

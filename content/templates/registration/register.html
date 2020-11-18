@@ -1,0 +1,207 @@
+
+
+{% extends 'authroot.html' %}
+{% load static %}
+{% block content %}
+      
+    <div class="col-md-4">
+        <div class="osahan-login py-4">
+            <div class="text-center mb-4">
+                <a href="/"><img src="{% static 'img/logo.svg' % }" alt=""></a>
+                <h5 class="font-weight-bold mt-3 auth_title">Join Today</h5>
+            </div>
+            <form action="" id="form_register" method="POST">
+            {% csrf_token %} 
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="mb-1">First name</label>
+                            <div class="position-relative icon-form-control">
+                                    <i class="feather-user position-absolute"></i>
+                                <input type="text" name="firstname" placeholder="Ex.Ramana" class="form-control required">
+                            </div>    
+                        </div>
+                        <div class="col-md-6">
+                            <label class="mb-1">Last name</label>
+                            <div class="position-relative icon-form-control">
+                                    <i class="feather-user position-absolute"></i>
+                                <input type="text" name="lastname" placeholder="Ex.Gude" class="form-control required">
+                            </div>    
+                        </div>
+                    </div>                   
+                </div>
+                <div class="form-group">
+                    <label class="mb-1">Email or Phone</label>
+                    <div class="position-relative icon-form-control">
+                        <i class="feather-at-sign position-absolute"></i>
+                        <input type="text" name="email" placeholder="Enter your email/phone number" class="form-control required">
+                    </div>
+                    <p class="alert_email alert_txt">Email already registered. Please login</p>
+                    <p class="alert_phone alert_txt">Phone number already registered. Please login</p>
+                    <p class="alert_both alert_txt">Invalid data.Please try again.</p>
+                </div>
+                <div class="form-group">
+                    <label class="mb-1">Password (8 or more characters)</label>
+                    <div class="position-relative icon-form-control">
+                        <i class="feather-unlock position-absolute"></i>
+                        <input type="password" name="password1" placeholder="Choose your password" class="form-control required">                            
+                    </div>
+                    <p class="alert_passmatch alert_txt">The password dont match.</p>
+                </div>
+                <div class="form-group">
+                    <label class="mb-1">Confirm password</label>
+                    <div class="position-relative icon-form-control">
+                        <i class="feather-unlock position-absolute"></i>
+                        <input type="password" name="password2" placeholder="Re-enter password" class="form-control required">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="mb-1">You agree to the Flicker face <a href="#">terms of use</a>, <a href="#">privacy policies</a> and <a  href="#">cookies policy</a>.</label>
+                </div>
+                <button class="btn btn-primary btn-block text-uppercase btn_register" type="button"> Agree & Join </button>
+                <input type="hidden" name="which" value="">
+            </form>
+                <div class="text-center mt-3 border-bottom pb-3">
+                    <p class="small text-muted">Or login with</p>
+                    <div class="row">
+                    <div class="col-4">
+                        <button type="button" class="btn btn-sm btn-outline-instagram btn-block"><i class="feather-instagram"></i> Instagram</button>
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="btn btn-sm btn-outline-linkedin btn-block"><i class="feather-linkedin"></i> Linkedin</button>
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="btn btn-sm btn-outline-facebook btn-block"><i class="feather-facebook"></i> Facebook</button>
+                    </div>
+                    </div>
+                </div>
+                <div class="py-3 d-flex align-item-center">
+                    <a href="/password_reset">Forgot password?</a>
+                    <span class="ml-auto"> Already on have an account? <a class="font-weight-bold" href="{% url 'login' %}">Sign in</a></span>
+                </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        function isEmail(email) {
+            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            return regex.test(email);
+        }
+        function isNumber(phone) {
+            var regex = /^([0-9])/;
+            return regex.test(phone);
+        }
+        $(document).ready(function(){
+            $(document).on('click','input[name="email"]',function(){
+                $(".alert_txt").css("display","none");
+            });
+            $(document).on('click','.btn_register',function()
+            {     
+                $('input[name="which"]').val('');            
+                var checkvalid = true;       
+                $(".required").each(function(){
+                    if($(this).val() == "")
+                    {                        
+                        $(this).addClass('alertborder');
+                        checkvalid = false;
+                    }
+                });
+                var is_email = isEmail($('input[name="email"]').val());
+                var is_phone = isNumber($('input[name="email"]').val());
+                
+                if(is_phone)
+                {
+                    if($('input[name="email"]').val().length < 9 || $('input[name="email"]').val().length > 14)
+                    {
+                        $('input[name="email"]').addClass("alertborder");
+                        return false;
+                    }
+                    else{
+                        $('input[name="which"]').val('phone');
+                    }
+                    
+                }
+                else if(is_email)
+                {
+                    $('input[name="which"]').val('email');
+                }
+                else
+                {                    
+                    $(".alert_both").css('display','block');
+                }
+                var password1 = $('input[name="password1"]').val();
+                var password2 = $('input[name="password2"]').val();       
+               
+                if(password1 != password2)
+                {                    
+                    $(".alert_passmatch").css('display','block');
+                    return false;
+                }
+                else
+                {
+                    if(password1.length < 8)
+                    {
+                        alert("The password must be 8 or more characters.");
+                        return false;
+                    }
+                    else
+                    {
+                        if(password1.match(/^[0-9]+$/))
+                        {
+                            alert("The password must be characters and numbers");  
+                            return false;   
+                        }
+                    }
+                }
+               
+                
+                if(checkvalid)
+                {                 
+                    if($('input[name="which"]').val()=="")
+                    {
+                        location.reload();
+                    }
+                    var data = $('#form_register').serialize();
+                    $.ajax({
+                        url: "{% url 'account:check_register' %}",
+                        method: 'POST', 
+                        type: 'json',
+                        data: data,           
+                        success: function (response) {                            
+                            
+                            var data = response.results;
+                            if(data.is_phone == '1' || data.is_email == '1')
+                            {
+                                if(data.is_phone == '1')
+                                {
+                                    $(".alert_phone").css('display','block');
+                                }
+                                if(data.is_email == '1')
+                                {
+                                    $(".alert_email").css('display','block');
+                                }
+                            }
+                            else
+                            {
+                                var cur_url = window.location.href.replace('register', 'login');                       
+                                window.location.replace(cur_url);
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    return false;
+                }
+            });
+            $(document).on('keyup','.alertborder',function(){
+                $(this).removeClass('alertborder');
+            });
+            $(document).on('keyup','.required',function(){
+                $(this).parent().parent().find('p').css('display','none');
+            });
+           
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% load static %}
+<div class="box shadow-sm border rounded bg-white mb-3">
+    <div class="box-title border-bottom p-3">
+        <h6 class="m-0">Groups you may interested in</h6>
+    </div>
+    <div class="box-body p-3 user_list_area">
+        {% if groups %}
+            {% for item in groups %}
+                <div class="d-flex align-items-center osahan-post-header mb-3 people-list">
+                    <div class="dropdown-list-image mr-3">
+                        <img class="rounded-circle" src="{{ item.avatar }}">                         
+                    </div>
+                    <div class="font-weight-bold mr-2">
+                        <div class="text-truncate"><a class="text-blue" href="{% url 'groups:view_group_detail' item.id %}">{{ item.title }}</a></div>
+                        <div class="small text-gray-500">
+                        </div>
+                    </div>
+                    <span class="ml-auto">
+                        <button type="button"  data-id="{{ item.id }}" class="btn btn-light btn-sm btn_group_follow">
+                            Follow
+                        </button>
+                    </span>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center">
+                <p>No group found.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>

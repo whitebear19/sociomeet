@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <link rel="icon" type="image/png" href="{% static 'img/fav.png' %}">
+      <title>Sociomeet</title>
+      <!-- Slick Slider -->
+      <link rel="stylesheet" type="text/css" href="{% static 'vendor/slick/slick.min.css' %}"/>
+      <link rel="stylesheet" type="text/css" href="{% static 'vendor/slick/slick-theme.min.css' %}"/>
+      <!-- Feather Icon-->
+      <link href="{% static 'vendor/icons/feather.css' %}" rel="stylesheet" type="text/css">
+      <!-- Bootstrap core CSS -->
+      <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+      <!-- Custom styles for this template -->
+      <link href="{% static 'css/style.css' %}" rel="stylesheet">
+       <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+   </head>
+   <body>
+      <div class="bg-white">
+         <div class="container">
+            <div class="row justify-content-center align-items-center d-flex vh-100">
+               <div class="col-md-4">
+                     <div class="text-center">
+                        <p>
+                           <a href="/" ><img style="width: 100%;" src="{% static 'img/logo.png' %}" alt=""></a>
+                        </p>            
+                        <h1 class="fs">Stay tuned with world</h1>
+                     </div>
+                     
+               </div>
+               <div class="col-md-1"></div>
+               {% block content %}
+               {% endblock %}
+            </div>
+         </div>
+      </div>
+      <div class="" id="loading">
+         <div class="lds-ring"><div></div><div></div><div></div><div></div>
+      </div>
+      <!-- Bootstrap core JavaScript -->
+      
+      <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+      <!-- slick Slider JS-->
+      <script type="text/javascript" src="{% static 'vendor/slick/slick.min.js' %}"></script>
+      <!-- Custom scripts for all pages-->
+      <script src="{% static 'js/osahan.js' %}"></script>
+   </body>
+</html>

@@ -1,0 +1,54 @@
+{% load static %}
+<div class="box mb-3 shadow-sm rounded bg-userinfo profile-box text-center">
+    <div class="py-4 px-3 border-bottom text-center">
+        <div class="main_useravatar pos_rel">
+            {% if user.avatar == '' %} 
+                <img src="{% static 'img/user.png' %}" class="img-fluid mt-2  rounded-angle" alt="Responsive image">
+            {% else %}
+                <img class="img-fluid  rounded-angle" src="{{ user.avatar.url }}">
+            {% endif %}
+            
+            <label  class="btn_global_edit_avatar" for="editUserAvatar">
+                <i class="feather-edit"></i>
+                <input id="editUserAvatar" name="file-attachment" type="file" accept=".jpg, .jpeg, .png, .gif" class="d-none">
+            </label>
+        </div>                  
+        <h5 class="font-weight-bold text-blue text-truncate profile_user_jobtitle mt-4">{{ user.jobtitle }}</h5>
+        <h5 class="font-weight-bold text-dark mb-1 mt-1">{{ user.first_name }} {{ user.last_name }}</h5>
+        <p class="mb-0 text-black-50 small">Joined on <span><b>{{ user.created_at|date:"d-m-Y" }}</b></span></p>
+        
+    </div>
+    <div class="d-flex">
+        <div class="col-6 border-right p-3">
+            <h6 class="font-weight-bold text-dark mb-1">
+                {% if followers %}
+                    {{ followers }}
+                {% else %}
+                    0
+                {% endif %}
+            </h6>
+            <p class="mb-0 text-black-50 small"><a class="text-blue font-weight-bold" href="{% url 'account:viewconnections' 'followers' %}">Followers</a></p>
+        </div>
+        <div class="col-6 p-3">
+            <h6 class="font-weight-bold text-dark mb-1">
+                {% if following %}
+                    {{ following }}
+                {% else %}
+                    0
+                {% endif %}
+            </h6>
+            <p class="mb-0 text-black-50 small"><a class="text-blue font-weight-bold" href="{% url 'account:viewconnections' 'following' %}">Following</a></p>
+        </div>
+    </div>
+
+    <div class="overflow-hidden border-top">
+        <a class="font-weight-bold fs-18 p-3 d-block text-blue" style="font-family: 'Times New Roman', Times, serif;" href="{% url 'account:profile' %}"> View my account </a>
+    </div>
+    <div class="overflow-hidden border-top">                    
+        <a class="font-weight-bold p-3 d-block" href="javascript:{document.getElementById('logout').submit()}"><i class="feather-log-out mr-1"></i> Logout</a>
+        <form method="post" action="{% url 'account:logout' %}" id="logout">
+            {% csrf_token %}
+            <input type="hidden">
+        </form>
+    </div>
+</div>

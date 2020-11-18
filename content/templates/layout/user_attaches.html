@@ -1,0 +1,33 @@
+{% load static %}
+
+ <div class="box shadow-sm border rounded bg-white mb-3">
+    <div class="box-title border-bottom p-3 d-flex align-items-center">
+        <h6 class="m-0">My gallary</h6>
+        {% if cnt_attachs > 9 %}
+            <a class="ml-auto" href="{% url 'account:attachmentsview' %}">See All <i class="feather-chevron-right"></i></a>
+        {% endif %}
+    </div>
+    <div class="box-body p-3">
+        <div class="gallery-box-main">
+            <div class="box-body p-3">
+                <div class="gallery-box-main text-center">
+                    <ul class="gallery_list">  
+                        {% if attachs %}                                  
+                            {% for item in attachs %}  
+                                <li>
+                                    {% if item.ext == 'avi' or item.ext == 'mp4' %}  
+                                        <video src="{{ item.attach }}" controls></video>
+                                    {% else %}
+                                        <img class="img-fluid" src="{{ item.attach }}" alt="">
+                                    {% endif %}
+                                </li>
+                            {% endfor %}                                    
+                        {% else %}                                        
+                            <p>There are no gallary to show.</p>                                       
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

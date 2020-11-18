@@ -1,0 +1,42 @@
+
+<div class="box shadow-sm border rounded bg-white mb-3">
+    <section class="user_following_part slider">
+        {% if followingusers %}
+            {% for item in followingusers %}
+            <a href="{% url 'account:view_user_profile' item.username %}">            
+                <div class="user_following_item text-center">
+                    <div class="pos_rel user_following_item_image">
+                        <img src="{{ item.avatar }}" alt="">
+                        <div class="status-indicator bg-success"></div>
+                    </div>            
+                    <p class="text-dark font-weight-bold text-ellipsis-dots">                        
+                        {{ item.firstname }} {{ item.lastname }}                                               
+                    </p>
+                    <p class="text-ellipsis-dots">
+                        Following                    
+                    </p>
+                </div>
+            </a>
+            {% endfor %}
+        {% else %}
+            <div class="text-center text-dark">
+                <p class="mt-2">You are not following anyone!.</p>
+            </div>
+        {% endif %}
+        
+    </section>
+</div>
+<script>
+    $(document).ready(function(){
+        $('.user_following_part').slick({
+            dots: false,
+            infinite: false,
+            speed: 300,
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            responsive: [
+                
+            ]
+        });
+    });
+</script>

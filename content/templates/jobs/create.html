@@ -1,0 +1,738 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="py-4">
+    <div class="container">
+       <div class="row justify-content-center">
+            
+            
+            <main class="col col-xl-8 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12 pos_rel">
+                
+                
+                <div class="main pl-2">               
+                    
+                    <div class="text-center mb-3">
+                       				
+                        <ul class="job_stepbyStep">
+                            <li>
+                                <span class="job_input_step_nav job_details selected_nav" id="nav_JobDetails">JOB DETAILS</span>
+                            </li>
+                            <li>
+                                <span class="job_input_step_nav job_short job_input_step_nav_B" id="nav_ShortInfo">SHORT INFO</span>
+                            </li>
+                            <li>
+                                <span class="job_input_step_nav job_location job_input_step_nav_B" id="nav_JobLocation">JOB LOCATION</span>
+                            </li>                           
+                            <li>
+                                <span class="job_input_step_nav job_preview job_input_step_nav_B last_nav" id="nav_PreviewSubmit">PREVIEW &amp; SUBMIT</span>
+                            </li>
+                        </ul>
+                        
+                    </div>
+
+                    <div class="box mb-3 bg-white job_contents">
+                        <form action="" id="form_create_job" method="post">
+                        {% csrf_token %}
+                            <div class="job_content_item selected_nav_content job_content_details">
+                                <label for="" class="job_title_md">
+                                    Post Details
+                                </label>
+                                <div class="form-group">
+                                    <label for="" class="job_title_sm">
+                                        Job/Post title
+                                        <span class="text-danger">*(max 80 characters)</span>
+                                    </label>
+                                    <input type="text" name="job_title" class="form-control input_job_title required_field" placeholder="Enter subject or title for your job">
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="job_title_sm">
+                                        Job description
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea type="text" name="job_description" class="form-control input_job_description required_field" rows="5" placeholder="Enter job description here..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="job_title_sm">
+                                        Response to this post
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="row">
+                                        <div class="col-md-12 mb-2">
+                                            <span class="text-danger">*Your contact information is protected</span>
+                                        </div>
+                                        
+                                        <div class="col-md-4  mb-2">
+                                            <div class="custom-control custom-checkbox mb-2">
+                                                <input type="checkbox" class="custom-control-input chk_reply_item" data-value="email" checked id="reply_email">
+                                                <label class="custom-control-label" for="reply_email">Email(Recommended)</label>
+                                            </div>
+                                            <input type="text" class="form-control required_field input_reply_item input_reply_item_email" name="email" placeholder="Ex: yourname@mail.com">
+                                        </div>
+                                        <div class="col-md-4  mb-2">
+                                            <div class="custom-control custom-checkbox mb-2">
+                                                <input type="checkbox" class="custom-control-input chk_reply_item" data-value="phone" id="reply_phone">
+                                                <label class="custom-control-label" for="reply_phone">Show my phone</label>
+                                            </div>
+                                            <input type="text" class="form-control input_reply_item input_reply_item_phone" name="phone" placeholder="Ex: xxx-xxxx-xxxx" disabled>
+                                        </div>
+                                        <div class="col-md-4  mb-2">
+                                            <div class="custom-control custom-checkbox mb-2">
+                                                <input type="checkbox" class="custom-control-input chk_reply_item" data-value="url" id="reply_url">
+                                                <label class="custom-control-label" for="reply_url">Show my web url</label>
+                                            </div>
+                                            <input type="text" class="form-control input_reply_item input_reply_item_url" name="url" placeholder="Ex: https://www.yourname.com" disabled>
+                                        </div>
+                                        
+                                        <div class="col-md-12  mb-2">
+                                            <div class="custom-control custom-checkbox mb-2">
+                                                <input type="checkbox" class="custom-control-input" name="reply" id="reply_not">
+                                                <label class="custom-control-label" for="reply_not">Don't reply</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 text-right">
+                                            <button class="btn btn_green btn_job_step" type="button" data-cur="details" data-nav="short">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="job_content_item job_content_short">
+                                <label for="" class="job_title_md">
+                                    Short Information
+                                </label>
+                                <div class="boarder-frame mb-3">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="" class="job_title_sm">
+                                                Client/Recuiter name
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="text" placeholder="Ex: Global state IT Solutions" class="input_client form-control" name="client">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="" class="job_title_sm">
+                                                Employment Location
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="text" name="location" placeholder="Ex: San diego,CA,USA" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="" class="job_title_sm">
+                                                Employment Type
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select type="text" name="jobtype" class="form-control input_type">
+                                                <option value="">Select Option</option>
+                                                <option value="Full-time">Full-time</option>
+                                                <option value="Contract">Contract</option>
+                                                <option value="Part-time">Part-time</option>
+                                                <option value="Temporary">Temporary</option>
+                                                <option value="Internship">Internship</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="" class="job_title_sm">
+                                                Telecommuting/Work from home available?
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">                                            
+                                            <select type="text" name="remote" class="form-control input_remote">
+                                                <option value="">Select Option</option>
+                                                <option value="No Remote">No Remote</option>
+                                                <option value="Completely Remote">Completely Remote</option>
+                                                <option value="Temporarily Remote">Temporarily Remote</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="" class="job_title_sm">
+                                                Travel Required?
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">                                            
+                                            <select type="text" name="travel" class="form-control input_travel">
+                                                <option value="">Select Option</option>
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>                                               
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="" class="job_title_sm">
+                                                Compensation/Salary
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex">
+                                                <div>
+                                                    <input type="text" placeholder="Ex: 5400" class="form-control salary_price" name="salary">
+                                                </div>
+                                                <div style="width: 50px;" class="text-center">
+                                                    <label for="" style="line-height: 34px;">Per</label>
+                                                </div>
+                                                <div>
+                                                    <select type="text" name="period" class="form-control salary_period">
+                                                        <option value="">Select Option</option>
+                                                        <option value="Month">Month</option>
+                                                        <option value="Year">Year</option>        
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="" class="job_title_sm">
+                                        Benefits(optional)
+                                    </label>
+                                    <div class="boarder-frame">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <div class="addtional_benefit">
+                                                    <label for="">
+                                                        Add addtional benefits here
+                                                    </label>
+                                                    <div class="row">
+                                                        <div class="col-md-6 mb-2">
+                                                            <input type="text" style="height: 30px;" class="input_add_benefit form-control">
+                                                        </div>
+                                                        <div class="col-md-6 text-center mb-2">
+                                                            <button type="button" class="btn btn_green btn_add_benefit">Add More</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <ul class="added_benefit">
+                                                    <li>
+                                                        <div>
+                                                            <input type="checkbox" name="benefit_item[]" class="input_benefit" value="401K(plan)">
+                                                            <span for="">401K(plan)</span>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div>
+                                                            <input type="checkbox" name="benefit_item[]" class="input_benefit" value="Dental Insurance">
+                                                            <span for="">Dental Insurance</span>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div>
+                                                            <input type="checkbox" name="benefit_item[]" class="input_benefit" value="Paid Time Off(PTO)">
+                                                            <span for="">Paid Time Off(PTO)</span>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div>
+                                                            <input type="checkbox" name="benefit_item[]" class="input_benefit" value="Life Insurance">
+                                                            <span for="">Life Insurance</span>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div>
+                                                            <input type="checkbox" name="benefit_item[]" class="input_benefit" value="Health Insurance">
+                                                            <span for="">Health Insurance</span>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div>
+                                                            <input type="checkbox" name="benefit_item[]" class="input_benefit" value="Vision Insurance">
+                                                            <span for="">Vision Insurance</span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="" class="job_title_sm">
+                                        Work authorization(optional)
+                                    </label>
+                                    <div class="boarder-frame">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="Any Valid Work Visa">
+                                                    <span for="">Any Valid Work Visa</span>
+                                                </label> 
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="US Citizen">
+                                                    <span for="">US Citizen</span>
+                                                </label> 
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="Green Card">
+                                                    <span for="">Green Card</span>
+                                                </label> 
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="EAD/TN">
+                                                    <span for="">EAD/TN</span>
+                                                </label> 
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="H1B">
+                                                    <span for="">H1B</span>
+                                                </label> 
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="L1">
+                                                    <span for="">L1</span>
+                                                </label> 
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="L2">
+                                                    <span for="">L2</span>
+                                                </label> 
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="CPT">
+                                                    <span for="">CPT</span>
+                                                </label> 
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="OPT/STEM">
+                                                    <span for="">OPT/STEM</span>
+                                                </label> 
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="M1">
+                                                    <span for="">M1</span>
+                                                </label> 
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="J1">
+                                                    <span for="">J1</span>
+                                                </label> 
+                                                <label class="mr-3">
+                                                    <input type="checkbox" name="work_auth[]" class="input_work_auth" value="Other">
+                                                    <span for="">Other</span>
+                                                </label> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="custom-control custom-checkbox mb-3">
+                                        <input type="checkbox" class="custom-control-input" id="job_other1">
+                                        <label class="custom-control-label" for="job_other1">We are e-verified and Eqaul Opportunity Employer(EOE)</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mb-3">
+                                        <input type="checkbox" class="custom-control-input" id="job_other2">
+                                        <label class="custom-control-label" for="job_other2">Work visa sponsership available for this position</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mb-3">
+                                        <input type="checkbox" class="custom-control-input" id="job_other3">
+                                        <label class="custom-control-label" for="job_other3">Invite people with disabilities for this position</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-right">
+                                    <button class="btn btn_green btn_job_step"  data-cur="short" type="button" data-nav="location">Next</button>
+                                </div>
+                            </div>
+                            <div class="job_content_item job_content_location">
+                                <label for="" class="job_title_md mb-3">
+                                    Job Location
+                                </label>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="" class="job_title_sm">
+                                            Zip
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="pos_rel">
+                                            <input type="text" id="service_zip" class="form-control" name="job_zip">
+                                            <button type="button" class="btn_transparent btn_get_postcode">
+                                                <i class="fas fa-crosshairs"></i>
+                                            </button>
+                                        </div>                                    
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="" class="job_title_sm">
+                                            City
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="">
+                                            <input type="text" id="service_city" class="form-control required_field" name="job_city">                                        
+                                        </div>                                    
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="" class="job_title_sm">
+                                            State
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="">
+                                            <input type="text" id="service_state" class="form-control required_field" name="job_state">                                        
+                                        </div>                                    
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="" class="job_title_sm">
+                                            Country
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="">
+                                            <input type="text" id="service_country" class="form-control required_field" name="job_country">                                        
+                                        </div>                                    
+                                    </div>
+                                    <div class="col-md-12 mt-3 mb-3">
+                                        <div class="job_location_map" id="job_location_map">
+                                            
+                                        </div>
+                                        <input type="hidden" name="lat" class="latitude" value="">
+                                        <input type="hidden" name="lng" class="longitude" value="">
+                                    </div>
+                                    <div class="col-md-12 text-right">
+                                        <button class="btn btn_green btn_job_step" type="button" data-cur="location"  data-nav="preview">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="job_content_item job_content_preview">
+                                <div class="mb-3">
+                                    <label for="" class="job_title_md mb-3 mr-auto">
+                                        Preview & Submit
+                                    </label>
+                                    <div class="text-right">
+                                        <button class="btn btn_green btn_job_step" type="button" data-cur="details"  data-nav="details">Edit</button>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="job_preview_content mb-3">
+                                    <div class="mb-2">
+                                        <label for="" class="job_title_publish" id="job_title_publish">
+                                            Playhouse job title
+                                        </label>
+                                    </div>
+                                    <div class="job_info pos_rel mb-3">
+                                        <div class="row">
+                                            <div class="col-md-4 part_type">
+                                                <p class="">
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Type
+                                                    </label>
+                                                    <span class="job_info_content job_info_type_publish">
+                                                        
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            <div class="col-md-4 part_remote">
+                                                <p class="">
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Remote
+                                                    </label>
+                                                    <span class="job_info_content job_info_remote_publish">
+                                                        
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p>
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Posted on
+                                                    </label>
+                                                    <span class="job_info_content job_info_postedon_publish">
+                                                        
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            <div class="col-md-4 part_salary">
+                                                <p class="">
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Salary
+                                                    </label>
+                                                    <span class="job_info_content job_info_salary_publish">
+                                                        
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p>
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Posted by
+                                                    </label>
+                                                    <span class="job_info_content job_info_postedby_publish">
+                                                        
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            <div class="col-md-4 part_travel">
+                                                <p class="">
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Travel required
+                                                    </label>
+                                                    <span class="job_info_content job_info_travel_publish">
+                                                        
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            <div class="col-md-12 part_client">
+                                                <p class="">
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Client/Recruiter
+                                                    </label>
+                                                    <span class="job_info_content job_info_client_publish">
+                                                        
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn_job_apply list_position">Apply</button>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label for="" class="job_title_publish">
+                                            Job Description
+                                        </label>
+                                    </div>
+                                    <div class="">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <textarea style="border:none;box-shadow:none;outline:none;font-family:Arial;line-height:25px;width: 100%;" readonly name="" id="job_description_publish"></textarea>                          
+                                            </div>                                       
+                                        </div>                                    
+                                    </div>
+                                    <div class="job_info part_benefits_workauth pos_rel mb-3">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p class="part_benefits">
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Benefits
+                                                    </label>
+                                                    <span class="job_info_content job_info_benefits_publish">
+                                                        
+                                                    </span>
+                                                    <input type="hidden" name="benefits" value="" class="job_info_benefits_publish_input">
+                                                </p>   
+                                                <p class="part_workauth">
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Work authorization
+                                                    </label>
+                                                    <span class="job_info_content job_info_workauth_publish">
+                                                        
+                                                    </span>
+                                                    <input type="hidden" name="workauth" value="" class="job_info_workauth_publish_input">
+                                                </p>                                                     
+                                            </div>                                        
+                                        </div>
+                                        <button type="button" class="btn_job_apply list_position">Apply</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <button class="btn btn_blue btn_job_submit" type="button">Preview & Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>              
+            </main>           
+        </div>
+    </div>
+</div>
+
+<script>    
+    var invite_user_array = [];
+    function initMap() {
+		var uluru = {lat: 32.715736, lng: -117.161087};
+		map = new google.maps.Map(
+		document.getElementById('job_location_map'), {zoom: 15, center: uluru});		
+				
+		var radius = null;
+		google.maps.event.addListener(map, "click", function (event) {
+
+			if(radius){
+				radius.setMap(null);
+			}
+			var latitude = event.latLng.lat();
+			var longitude = event.latLng.lng();
+			$(".latitude").val(latitude);
+			$(".longitude").val(longitude);
+
+			radius = new google.maps.Circle({map: map,
+				radius: 200,
+				center: event.latLng,
+				fillColor: '#777',
+				fillOpacity: 0.1,
+				strokeColor: '#AA0000',
+				strokeOpacity: 0.8,
+				strokeWeight: 2,
+				draggable: true,    // Dragable
+				editable: true      // Resizable
+			});			
+			map.panTo(new google.maps.LatLng(latitude,longitude));	
+		}); 
+    }
+    
+    function getCityState($zip, $blnUSA) 
+    {
+        
+        var date = new Date();
+        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json?address=' + $zip + '&key=AIzaSyDL67IIFF0YgSBp95rU_OnzsRogvbqhH6M&type=json&_=' + date.getTime(), function(response){
+            
+            if(response.status == "OK")
+            {
+                console.log(response.status);
+                var address_components = response.results[0].address_components;
+                var location_components = response.results[0].geometry.location;
+                var new_lat = location_components.lat;
+                var new_lng = location_components.lng;
+                
+                $.each(address_components, function(index, component){
+                    var types = component.types;			 
+                    $.each(types, function(index, type){
+                        if(type == 'locality') {
+                        city = component.long_name;						
+                        }
+                        if(type == 'administrative_area_level_1') {
+                        state = component.short_name;
+                        }
+                        if(type == 'administrative_area_level_2') {
+                        county = component.short_name;
+                        county = county.replace(' County','');
+                        }						
+                        if(type == 'country') {
+                        country = component.short_name;				  
+                        }
+                    });
+                });
+                
+                $("#service_city").val(city);
+                $("#service_state").val(state);
+                $("#service_country").val(country);               
+                $('#service_zip').val($zip);
+                $(".latitude").val(new_lat);
+                $(".longitude").val(new_lng);
+                var uluru = {lat: new_lat, lng: new_lng};        
+            
+                var map = new google.maps.Map(document.getElementById('job_location_map'), {
+                        center: uluru,
+                        zoom: 13,
+                        mapTypeId: 'roadmap'
+                    });
+
+                var ctaLayer = new google.maps.KmlLayer({
+                    url: 'https://zipcode.adnlist.com/zip'+$zip+'.kml',
+                    map: map
+                });				
+                
+            }
+            else
+            {			
+                $(".latitude").val("");
+                $(".longitude").val("");
+                $("#service_zip").addClass("alert-border");
+                $("#service_city").val("");
+                $("#service_state").val("");
+                $("#service_country").val("");
+                                
+                swal({
+                    title: "Something wrong!",  
+                    text: "Invalid zipcode.",                          
+                    type: "error"
+                }).then(function() {
+                    
+                });               
+            }
+            
+        });
+    }
+    $(document).ready(function(){
+        
+
+        $('#service_zip').keyup(function() {
+            $(this).removeClass("alert-border");
+			$zval = $('#service_zip').val();
+			
+			if($zval.length == 5){
+				
+				$jCSval = getCityState($zval, true);
+				$("#service_address").val("");
+			}
+        });
+        
+
+        
+
+        $(document).on('click','.btn_get_postcode',function()
+        {          
+            $("#loading").css("display","block");  
+            $.ajax({               
+                url:"{% url 'jobs:get_postcode' %}",
+                type: 'get',
+                dataType: 'json',               
+
+                success: function(response){                  
+                    $("#loading").css("display","none");
+                    if(response.results)
+                    {    
+                        var zipcode = response.zipcode;
+                        if(zipcode=="")
+                        {
+                            swal({
+                                title: "No response!",  
+                                text: "Please input manual your zipcode.",                             
+                                type: "success"
+                            }).then(function() {
+                                $('#service_zip').focus();
+                            });
+                        }  
+                        else
+                        {
+                            $zval = zipcode;
+                            $jCSval = getCityState($zval, true);
+                        }                                           
+                    }
+                    else
+                    {
+                        swal({
+                            title: "Something wrong!",  
+                            text: "Please try again.",                          
+                            type: "error"
+                        }).then(function() {
+                            $('#service_zip').focus();
+                        });
+                    }                    
+
+                }
+            });
+        });    
+        $(document).on('click','.btn_job_submit',function()
+        {            
+            $.ajax({               
+                url:"{% url 'jobs:store_job' %}",
+                type: 'post',
+                dataType: 'json',
+                data: $("#form_create_job").serialize(),
+
+                success: function(response){                  
+                    $("#loading").css("display","none");
+                    if(response.results)
+                    {                        
+                        swal({
+                            title: "Job post successfully submitted!",                            
+                            type: "success"
+                        }).then(function() {
+                            
+                            var cur_url = window.location.href.replace('create', 'dashboard');                       
+                            window.location.replace(cur_url);
+                        });
+                    }
+                    else
+                    {
+                        swal({
+                            title: "Something wrong!",  
+                            text: "Please try again.",                          
+                            type: "error"
+                        }).then(function() {
+                            location.reload();
+                        });
+                    }                    
+
+                }
+            });
+        });      
+    });
+</script>
+
+{% endblock %}

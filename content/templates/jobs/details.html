@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="py-4">
+    <div class="container">
+       <div class="row justify-content-center">
+            
+            
+            <main class="col col-xl-8 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12 pos_rel">
+                
+                {% include "layout/main_sub_menu.html" %}
+                <div class="main_body_left_margin pl-2">               
+                    
+                    <div class="mb-3">
+                        {% include "layout/jobs/job_searchbox.html" %}
+                    </div>                   
+                    <div class="box mb-3">                       
+                       <div>
+                           <a href="{% url 'jobs:jobdashboard' %}" class="text-blue mb-2 fs-18">
+                               Back to jobs
+                           </a>
+                           <div>
+                                <div class="job_preview_content">
+                                    <div class="mb-2">
+                                        <label for="" class="job_title_publish" id="job_title_publish">
+                                            {{ job.title }}
+                                        </label>
+                                    </div>
+                                    <div class="job_info pos_rel mb-3">
+                                        <div class="row">
+                                            {% if job.jobtype %}
+                                            <div class="col-md-4">
+                                                <p>
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Type
+                                                    </label>
+                                                    <span class="job_info_content job_info_type_publish">
+                                                        {{ job.jobtype }}
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            {% endif %}
+                                            {% if job.remote %}
+                                            <div class="col-md-4">
+                                                <p>
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Remote
+                                                    </label>
+                                                    <span class="job_info_content job_info_remote_publish">
+                                                        {{ job.remote }}
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            {% endif %}
+                                            <div class="col-md-4">
+                                                <p>
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Posted on
+                                                    </label>
+                                                    <span class="job_info_content job_info_postedon_publish">
+                                                        {{ job.created_at }}
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            {% if job.salary %}
+                                            <div class="col-md-4">
+                                                <p>
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Salary
+                                                    </label>
+                                                    <span class="job_info_content job_info_salary_publish">
+                                                        ${{ job.salary }}/{{ job.period }}
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            {% endif %}
+                                            <div class="col-md-4">
+                                                <p>
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Posted by
+                                                    </label>
+                                                    <span class="job_info_content job_info_postedby_publish">
+                                                        {{ job.postedby }}
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            {% if job.travel %}
+                                            <div class="col-md-4">
+                                                <p>
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Travel required
+                                                    </label>
+                                                    <span class="job_info_content job_info_travel_publish">
+                                                        {{ job.travel }}
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            {% endif %}
+                                            {% if job.client %}
+                                            <div class="col-md-12">
+                                                <p>
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Client/Recruiter
+                                                    </label>
+                                                    <span class="job_info_content job_info_client_publish">
+                                                        {{ job.client }}
+                                                    </span>
+                                                </p>                                            
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <button type="button" class="btn_job_apply list_position">Apply</button>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label for="" class="job_title_publish">
+                                            Job Description
+                                        </label>
+                                    </div>
+                                    <div class="">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <textarea style="background-color: transparent;border:none;box-shadow:none;outline:none;font-family:Arial;line-height:25px;width: 100%;" readonly name="" id="job_description_publish">{{ job.description }}</textarea>                          
+                                            </div>                                       
+                                        </div>                                    
+                                    </div>
+                                    <div class="job_info pos_rel mb-3">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p>
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Benefits
+                                                    </label>
+                                                    <span class="job_info_content job_info_benefits_publish">
+                                                        {{ job.benefits }}
+                                                    </span>                                                   
+                                                </p>   
+                                                <p>
+                                                    <label for="" class="job_info_label mr-3">
+                                                        Work authorization
+                                                    </label>
+                                                    <span class="job_info_content job_info_workauth_publish">
+                                                        {{ job.workauth }}
+                                                    </span>                                                   
+                                                </p>                                                     
+                                            </div>                                        
+                                        </div>
+                                        <button type="button" class="btn_job_apply list_position">Apply</button>
+                                    </div>
+                                </div>
+                           </div>
+                       </div>
+
+                    </div>
+                </div>              
+            </main>
+            <aside class="col col-xl-4 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-6 col-12">                
+                {% include "layout/jobs/recent_jobs.html" %}  
+            </aside>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+   
+
+    $(document).ready(function(){
+        autosize(document.getElementById("job_description_publish"));
+        
+    });
+</script>
+
+{% endblock %}

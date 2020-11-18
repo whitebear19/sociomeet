@@ -1,0 +1,15 @@
+{% load static %}
+<div class="box shadow-sm border rounded bg-white mb-3">
+    <div class="box-title border-bottom p-3">
+        <h6 class="m-0">Recent Jobs</h6>
+    </div>
+    <div class="box-body p-3 user_list_area">
+        {% if jobs %}
+            
+        {% else %}
+            <div class="text-center">
+                <p>No recent jobs found.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>

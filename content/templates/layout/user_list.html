@@ -1,0 +1,33 @@
+{% load static %}
+<div class="box shadow-sm border rounded bg-white mb-3">
+    <div class="box-title border-bottom p-3">
+        <h6 class="m-0">People you may interested in</h6>
+    </div>
+    <div class="box-body p-3 user_list_area">
+        {% if users %}
+            {% for item in users %}
+                <div class="d-flex align-items-center osahan-post-header mb-3 people-list">
+                    <div class="dropdown-list-image mr-3">
+                        <img class="rounded-circle" src="{{ item.avatar }}">                        
+                        <div class="status-indicator bg-success"></div>
+                        
+                    </div>
+                    <div class="font-weight-bold mr-2">
+                        <div class="text-truncate"><a class="text-blue" href="{% url 'account:view_user_profile' item.username %}">{{ item.firstname }} {{ item.lastname }}</a></div>
+                        <div class="small text-gray-500">
+                        </div>
+                    </div>
+                    <span class="ml-auto">
+                        <button type="button" data-id="{{ item.id }}" class="btn btn-light btn-sm btn_connection">
+                            {% if item.followed == '1' %}Following{% else %}Follow{% endif %}
+                        </button>
+                    </span>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center">
+                <p>There are no people registered.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>

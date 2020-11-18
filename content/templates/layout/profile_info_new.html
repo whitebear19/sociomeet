@@ -1,0 +1,65 @@
+<div class="box shadow-sm rounded bg-white mb-3 osahan-share-post d-flex-normal" style="padding:10px;">
+    <div class="profile_user_avatar_new_image pos_rel mr-3">
+        <img src="{{ curuser.avatar }}" alt="">  
+        {% if curuser.me == '1' %}      
+            <label  class="btn_global_edit_avatar" for="editUserAvatar">
+                <i class="feather-edit"></i>
+                <input id="editUserAvatar" name="file-attachment" type="file" accept=".jpg, .jpeg, .png, .gif" class="d-none">
+            </label>
+        {% endif %}
+    </div>
+    <div class="profile_user_content">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center h-85px">
+                    <div class="profile_user_avatar_new_content text-ellipsis-dots">
+                        <h5 class="font-weight-bold text-blue text-truncate profile_user_jobtitle mb-0">{{ curuser.firstname }} {{ curuser.lastname }}</h5>
+                        <p class="mb-0"><span class="user_joined mr-1">Joined:</span><span class="user_joined_date text-black-50">{{ curuser.created_at|date:"d-m-Y" }}</span></p>
+                        <h5 class="font-weight-bold text-blue text-truncate profile_user_jobtitle mb-0">
+                            <span class="user_job_title mr-1">
+                                {{ curuser.jobtitle }}
+                            </span>
+                            
+                            <span class="user_location">{{ curuser.location }}</span>
+                        </h5>
+                    </div>               
+                </div>
+                              
+            </div>
+            <div class="col-md-6">
+                <div class="w-100 d-flex align-items-center h-85px">
+                    <ul class="profile_user_avatar_new_follow_ul">
+                        <li class="text-center">
+                            {% if curuser.me == '1' %}
+                                <a href="{% url 'account:viewconnections' 'following' %}" class="profile_user_avatar_new_follow_item">Following</a>
+                            {% else %}
+                                <a href="#" class="profile_user_avatar_new_follow_item">Following</a>
+                            {% endif %}
+                            <p class="font-weight-bold text-blue text-truncate profile_user_jobtitle mt-1">
+                                {% if curuser.following %}
+                                    {{ curuser.following }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </p>
+                        </li>
+                        <li class="text-center">                            
+                            {% if curuser.me == '1' %}
+                                <a href="{% url 'account:viewconnections' 'followers' %}" class="profile_user_avatar_new_follow_item">Followers</a>
+                            {% else %}
+                                <a href="#" class="profile_user_avatar_new_follow_item">Followers</a>
+                            {% endif %}
+                            <p class="font-weight-bold text-blue text-truncate profile_user_jobtitle mt-1">
+                                {% if curuser.followers %}
+                                    {{ curuser.followers }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

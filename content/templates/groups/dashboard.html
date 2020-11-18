@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="py-4">
+    <div class="container">
+       <div class="row justify-content-center">
+            
+            
+            <main class="col col-xl-8 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12 pos_rel">
+                
+                {% include "layout/main_sub_menu.html" %}
+                <div class="main_body_left_margin pl-2">               
+                    
+                    <div class="mb-3">
+                        {% include "layout/group/group_searchbox.html" %}
+                    </div>
+
+                    <div class="box mb-3">
+                        <label for="" class="group_title">Your own Group</label>
+                        <div class="border-group_area bg-white">
+                            {% if usergroups %}
+                                {% for item in usergroups %}
+                                    {% include "layout/group/group_item.html" %}
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center">
+                                    <p>There is no any group.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="box mb-3">
+                        <label for="" class="group_title">Group you follow</label>
+                        <div class="border-group_area">
+                            {% if followgroups %}
+                                {% for item in followgroups %}
+                                    {% include "layout/group/group_item.html" %}
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center">
+                                    <p>You are not following any group yet!</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="box mb-3">
+                        <label for="" class="group_title">All Groups</label>
+                        <div class="border-group_area">
+                            {% if allgroups %}
+                                {% for item in allgroups %}
+                                    {% include "layout/group/group_item.html" %}
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center">
+                                    <p>No other groups found!</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>              
+            </main>
+            <aside class="col col-xl-4 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-6 col-12">
+                
+                {% include "layout/user_list.html" %}
+
+               
+                
+            </aside>
+        </div>
+    </div>
+</div>
+
+<script>
+     var currentPage = 1;
+    var pagenum = 1;
+
+    var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp','avi','mp4'];
+    var imgExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+    var videoExtension = ['avi','mp4'];
+    var max_file_number = 10;
+    var item_width = 160;
+    var curSlidePos = 0;
+    var slideLeft = 0
+    var cur_user_avatar_url = '';
+    var cur_user_full_name = '';
+    var max_cnt = 500;
+    var where = '';
+    var is_mobile = false;
+   
+
+    $(document).ready(function(){
+        // -------set_follow_part
+        $(document).on('click','.btn_group_follow',function(){
+            var id = $(this).data('id');
+            if(id=="")
+            {               
+                return false;
+            }
+            
+            var formdata = new FormData;            
+            var token = '{{csrf_token}}';
+            formdata.append('id',id); 
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url:"{% url 'groups:set_followgroup' %}",
+                type: 'post',
+                dataType: 'json',
+                data: formdata,
+
+                processData: false,
+                contentType: false,
+                success: function(response){                  
+                    $("#loading").css("display","none");
+                    if(response.results)
+                    { 
+                        location.reload();
+                    }
+                    else
+                    {
+                        swal({
+                            title: "Something wrong!",  
+                            text: "Please try again.",                          
+                            type: "error"
+                        }).then(function() {
+                            location.reload();
+                        });
+                    }                    
+
+                }
+            });
+        });  
+        // -------set_follow_part--------end
+    });
+</script>
+
+{% endblock %}

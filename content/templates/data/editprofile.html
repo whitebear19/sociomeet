@@ -1,0 +1,1401 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+{% load static %}
+
+<div class="py-4">
+    <div class="container">
+       <div class="row">
+            <aside class="col-md-4">
+                <div class="mb-3 border rounded bg-white profile-box text-center w-10">
+                    <div class="p-4 text-center">
+                        {% if user.avatar == '' %}                        
+                            <img src="{% static 'img/user.png' %}" class="img-fluid img-user-avatar rounded-angle" alt="Responsive image">
+                        {% else %}
+                            <img src="{{ user.avatar.url }}" class="img-fluid img-user-avatar rounded-angle" style="max-width:60%;" alt="Responsive image">
+                        {% endif %}                         
+                    </div>
+                    <div class="">
+                        <label data-toggle="tooltip" data-placement="top" data-original-title="Upload New Picture" class="btn btn-info m-0" for="fileAttachmentBtn">
+                            <i class="feather-image"></i>
+                            <input id="fileAttachmentBtn" name="file-attachment" type="file" accept=".jpg, .jpeg, .png, .gif" class="d-none">
+                        </label>
+                        <button data-toggle="tooltip" data-placement="top" data-original-title="Delete" type="button" class="btn btn-danger btn-remove-avatar"><i class="feather-trash-2"></i></button>
+                    </div>
+                    <div class="mb-3">
+                        <h5 class="font-weight-bold text-dark mb-1 mt-1">{{ user.first_name }} {{ user.last_name }}</h5>
+                        <p class="mb-0 text-black-50 small">Joined on <span><b>{{ user.created_at|date:"d-m-Y" }}</b></span></p>
+                    </div>
+                </div>
+                <div class="border rounded bg-white mb-3">
+                    <div class="box-title border-bottom p-3">
+                        <h6 class="m-0">About</h6>
+                        <p class="mb-0 mt-0 small">Tell about yourself in two sentences.
+                        </p>
+                    </div>
+                    <div class="box-body">
+                        <form action="" id="form_aboutMe" method="post">   
+                        {% csrf_token %}                 
+                            <div class="p-3 border-bottom">
+                                <div class="form-group mb-4">                                
+                                    <div class="position-relative">
+                                    <textarea class="form-control aboutme" rows="4" name="aboutme" placeholder="">{{ user.aboutme }}</textarea>
+                                    </div>
+                                </div>                            
+                            </div>
+                            <div class="overflow-hidden text-center p-3">
+                                <button class="font-weight-bold btn btn-light rounded p-3 d-block width100" id="btn_store_aboutme" type="button"> SAVE </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>                
+            </aside>
+            <main class="col-md-8">
+                {% include "layout/user_profile_nav_edit.html" %}
+                <div id="user_posts" class="content_user_nav display_none  mb-3">  
+                    <div class="box shadow-sm bg-newpost rounded bg-white mb-3 osahan-share-post">
+                    
+                        <form action="" id="form_create_post" method="post">
+                        {% csrf_token %}
+                            <ul class="nav nav-justified border-bottom osahan-line-tab" id="myTab" role="tablist">
+                                <li class="nav-item" style="display:inherit;">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="" role="tab" aria-controls="home" aria-selected="true"><i class="feather-edit"></i> Share an update</a>
+                                </li>                
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                    <div class="p-3 d-flex align-items-center w-100" href="#">
+                                        <div class="dropdown-list-image mr-3">                            
+                                            {% if user.avatar == '' %} 
+                                                <img class="rounded-circle" src="{% static 'img/user.png' %}">
+                                            {% else %}
+                                                <img class="rounded-circle" src="{{ user.avatar.url }}">
+                                            {% endif %}
+                                            <div class="status-indicator bg-success"></div>
+                                        </div>
+                                        <div class="w-100 pos_rel">
+                                            <textarea placeholder="Write your thoughts..." class="form-control border-0 p-0 shadow-none post_content" id="post_content" name="content" rows="3"></textarea>
+                                            <span class="cnt_remain">
+                                                <span class="cnt_remain_txt">
+                                                    500
+                                                </span> words left
+                                            </span>
+                                                
+                                        </div>
+                                    </div>
+                                </div>            
+                            </div>
+                            <div class="border-top slider_wrap">
+                                <div class="uploaded_files">
+    
+                                </div>
+                                <button type="button" class="btn_transparent btn_slide_arrow slide_arrow_left">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button type="button" class="btn_transparent btn_slide_arrow slide_arrow_right">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="border-top p-3 d-flex align-items-center">
+                                <div class="mr-auto btn_group_area">                        
+                                    <label data-toggle="tooltip" data-placement="top" data-original-title="Upload New Picture" class="btn  mr-1" for="fileAttachmentBtn">
+                                        <i class="feather-image" style="color:#22b14c;font-weight:600;font-size: 20px;"></i> Photo/Video
+                                        <input id="fileAttachmentBtn" name="file-attachment" type="file" accept=".jpg, .jpeg, .png, .gif, .mp3, .mp4, .avi , .txt, .doc, .xls," class="d-none" multiple>
+                                    </label>
+                                    <button class="btn_emojis mr-1" id="btn_emojis" type="button">
+                                        <i class="far fa-smile-beam"></i>
+                                    </button>
+                                    <button class="btn_emojis mr-1"  type="button">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </button>
+                                    <button class="btn_emojis mr-1"  type="button">
+                                        GIF
+                                    </button>
+                                </div>
+                                <div class="flex-shrink-1 add_cancel_btn">                
+                                    <button type="button" class="btn btn-primary btn-sm btn_store_post">Submit</button>
+                                </div>
+                            </div>      
+                            <input type="hidden" name="post_id" id="post_id">                 
+                        </form>
+                    </div>                  
+                    <div class="post_list">
+                    </div> 
+                    <div class="text-center" style="display: none;">
+                        <form action="" id="pagination-form" method="get">
+                        
+                            <ul id="pagination-150" class="Pagination">
+                                <li data-link="1" class="Pagination-item">
+                                    <button type="button" class="btn-start btn_pagination_item Pagination-link">
+                                    <span>
+                                        <i class="fas fa-step-backward"></i>
+                                    </span>
+                                    </button>
+                                </li>
+                                <li data-link="prev_page" class="Pagination-item">
+                                    <button type="button" class="btn-prev btn_pagination_item paginate_button Pagination-link">
+                                    <span>
+                                        <i class="fas fa-caret-left"></i>
+                                    </span>
+                                    </button>
+                                </li>
+                                
+                                
+                                <li class="Pagination-item">
+                                    <button type="button" class="btn-current-page btn-first btn_pagination_item number Pagination-link is-active"></button> 
+                                </li>
+                                
+                                <li data-link="next_page" class="Pagination-item">
+                                    <button type="button" class="btn-next btn_pagination_item Pagination-link">
+                                    <span>
+                                        <i class="fas fa-caret-right"></i>
+                                    </span>
+                                    </button>
+                                </li>
+                                <li data-link="last_page" class="Pagination-item">
+                                    <button type="button" class="btn-end btn_pagination_item Pagination-link">
+                                    <span>
+                                        <i class="fas fa-step-forward"></i>
+                                    </span>
+                                    </button>
+                                </li>
+                            </ul>
+                            <input type="hidden" name="currentPage" id="currentPage">     
+                            <input type="hidden" name="where" value="profilepage">    
+                            <input type="hidden" name="user_id" value="">               
+                        </form>
+                    </div>        
+                </div>
+                <div id="user_social" class="content_user_nav box display_none shadow-sm bg-white rounded bg-white mb-3">
+                    <div class="box-title border-bottom p-3">
+                        <h6 class="m-0">Social profiles</h6>
+                        <p class="mb-0 mt-0 small">Add elsewhere links to your profile.
+                        </p>
+                    </div>
+                    <div class="box-body">
+                        <form action="" id="form_socialLink" method="post">
+                        {% csrf_token %}
+                            <div class="p-3 border-bottom">
+                                <div class="position-relative icon-form-control mb-2">
+                                    <i class="feather-instagram position-absolute text-warning"></i>
+                                    <input placeholder="Add Instagram link" name="linkInstagram" type="text" value="{{ user.linkInstagram }}" class="form-control">
+                                </div>
+                                <div class="position-relative icon-form-control mb-2">
+                                    <i class="feather-facebook position-absolute text-primary"></i>
+                                    <input placeholder="Add Facebook link" name="linkFacebook" value="{{ user.linkFacebook }}" type="text" class="form-control">
+                                </div>
+                                <div class="position-relative icon-form-control mb-2">
+                                    <i class="feather-twitter position-absolute text-info"></i>
+                                    <input placeholder="Add Twitter link" name="linkTwitter" type="text" value="{{ user.linkTwitter }}" class="form-control">
+                                </div>
+                                <div class="position-relative icon-form-control mb-2">
+                                    <i class="feather-youtube position-absolute text-danger"></i>
+                                    <input placeholder="Add Youtube link" name="linkYoutube" value="{{ user.linkYoutube }}" type="text" class="form-control">
+                                </div>
+                                <div class="position-relative icon-form-control mb-0">
+                                    <i class="feather-github position-absolute text-dark"></i>
+                                    <input placeholder="Add Github link" name="linkGithub" value="{{ user.linkGithub }}" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="overflow-hidden text-center p-3">
+                                <button class="font-weight-bold btn btn-light rounded p-3 d-block width100" id="btn_store_social_link" type="button"> Update Social Profiles </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>  
+
+                <div id="user_experience" class="content_user_nav display_none box shadow-sm border rounded bg-white  mb-3">
+                    <div>
+                        <form action="" id="form_experience" method="post">
+                        {% csrf_token %}
+                            <div class="">
+                                <div class="box-title border-bottom p-3">
+                                    <h6 class="m-0">Experience
+                                    </h6>
+                                    <p class="mb-0 mt-0 small">Tell about your work, job, and other experiences.
+                                    </p>
+                                </div>
+                                <div class="box-body px-3 pt-3 pb-0">
+                                    <div class="row">
+                                        <div class="col-sm-12 mb-4">
+                                            <label id="FROM" class="form-label">Title</label>
+                                            <!-- Input -->
+                                            <div class="input-group">
+                                            <input type="text" class="form-control required_form_basicinfo" placeholder="Title" name="title">
+                                            </div>
+                                            <!-- End Input -->
+                                        </div>
+                                        <div class="col-sm-6 mb-4">
+                                            <label id="FROM" class="form-label">FROM</label>
+                                            <!-- Input -->
+                                            <div class="input-group">
+                                            <input type="text" class="form-control required_form_basicinfo" placeholder="From" name="from" aria-label="FROM" aria-describedby="FROM">
+                                            </div>
+                                            <!-- End Input -->
+                                        </div>
+                                        <div class="col-sm-6 mb-4">
+                                            <label id="TO" class="form-label">TO</label>
+                                            <!-- Input -->
+                                            <div class="input-group">
+                                            <input type="text" class="form-control required_form_basicinfo" name="to" placeholder="TO" aria-label="TO" aria-describedby="TO">
+                                            </div>
+                                            <!-- End Input -->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 mb-4">
+                                            <label id="" class="form-label">Company</label>
+                                            <!-- Input -->
+                                            <div class="input-group">
+                                            <input type="text" class="form-control required_form_basicinfo" name="company" placeholder="Enter your company title" value="">
+                                            </div>
+                                            <!-- End Input -->
+                                        </div>
+                                        <div class="col-sm-6 mb-4">
+                                            <label id="" class="form-label">Position</label>
+                                            <!-- Input -->
+                                            <div class="input-group">
+                                            <input type="text" class="form-control required_form_basicinfo" value="" name="position" placeholder="Enter your position">
+                                            </div>
+                                            <!-- End Input -->
+                                        </div>
+                                        <div class="col-sm-12 mb-4">
+                                            <label id="positionLabel" class="form-label">Responsibilities</label>
+                                            <!-- Input -->
+                                            <div class="input-group">
+                                            <textarea type="text" class="form-control required_form_basicinfo" name="responsibilities" placeholder="" aria-label=""></textarea>
+                                            </div>
+                                            <!-- End Input -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 text-right p-2">                               
+                                    <button type="button" class="btn btn-primary btn-sm" id="btn_store_experience">Add</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="border rounded bg-white mb-3">
+                            {% for item in experiences %}
+                                <div class="box-body p-3 border-bottom">
+                                    <div class="d-flex align-items-top job-item-header pb-2">
+                                        <div class="mr-2">
+                                            <h6 class="font-weight-bold text-dark mb-0">{{ item.title }}</h6>
+                                            <div class="text-truncate text-primary">{{ item.company }}</div>
+                                            <div class="small text-gray-500">{{ item.date_start }} - {{ item.date_end }} </div>
+                                        </div>                                    
+                                        <button data-id="{{ item.id }}" class="btn_transparent btn_delete_experience ml-auto mb-auto"><i class="fas fa-times"></i></button>
+                                    </div>
+                                    <p class="mb-0">{{ item.responsibilities }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div id="user_education" class="content_user_nav display_none box shadow-sm border rounded bg-white  mb-3">                    
+                    <div>
+                        <form action="" id="form_education" method="post">
+                        {% csrf_token %}
+                            <div class="mb-3">
+                                <div class="box-title border-bottom p-3">
+                                    <h6 class="m-0">Education Details
+                                    </h6>
+                                    <p class="mb-0 mt-0 small">Tell about your education.
+                                    </p>
+                                </div>
+                                <div class="box-body px-3 pt-3 pb-0">
+                                    <div class="row">                                   
+                                        <div class="col-sm-6 mb-4">
+                                            <label id="FROM" class="form-label">FROM</label>
+                                            <!-- Input -->
+                                            <div class="input-group">
+                                            <input type="text" class="form-control required_form_basicinfo" placeholder="From" name="from" aria-label="FROM" aria-describedby="FROM">
+                                            </div>
+                                            <!-- End Input -->
+                                        </div>
+                                        <div class="col-sm-6 mb-4">
+                                            <label id="TO" class="form-label">TO</label>
+                                            <!-- Input -->
+                                            <div class="input-group">
+                                            <input type="text" class="form-control required_form_basicinfo" name="to" placeholder="TO" aria-label="TO" aria-describedby="TO">
+                                            </div>
+                                            <!-- End Input -->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 mb-4">
+                                            <label id="" class="form-label">School/College/University</label>
+                                            <!-- Input -->
+                                            <div class="input-group">
+                                            <input type="text" class="form-control required_form_basicinfo" name="school" placeholder="Enter your here" value="">
+                                            </div>
+                                            <!-- End Input -->
+                                        </div>
+                                        <div class="col-sm-6 mb-4">
+                                            <label id="" class="form-label">Degree Earned</label>
+                                            <!-- Input -->
+                                            <div class="input-group">
+                                            <input type="text" class="form-control required_form_basicinfo" value="" name="degree" placeholder="Enter your position">
+                                            </div>
+                                            <!-- End Input -->
+                                        </div>                                    
+                                    </div>
+                                </div>
+                                <div class="mb-3 text-right p-2">                               
+                                    <button type="button" class="btn btn-primary btn-sm" id="btn_store_education">Add</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="border rounded bg-white mb-3">
+                            {% for item in educations %}
+                                <div class="box-body p-3 border-bottom">
+                                    <div class="d-flex align-items-top job-item-header pb-2">
+                                        <div class="mr-2">
+                                            <h6 class="font-weight-bold text-dark mb-0">{{ item.school }}</h6>
+                                            <div class="text-truncate text-primary">{{ item.degree }}</div>
+                                            <div class="small text-gray-500">{{ item.date_start }} - {{ item.date_end }} </div>
+                                        </div>                                    
+                                        <button data-id="{{ item.id }}" class="btn_transparent btn_delete_education ml-auto mb-auto"><i class="fas fa-times"></i></button>
+                                    </div>
+                                    <p class="mb-0">{{ item.responsibilities }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="user_basicinfo" class="content_user_nav display_none box shadow-sm border rounded bg-white  mb-3">                    
+                    <div class="box-title border-bottom p-3">
+                        <h6 class="m-0">Basic Information</h6>
+                        <p class="mb-0 mt-0 small">
+                        </p>
+                    </div>
+                    <form class="js-validate" id="form_basicinfo" method="POST" novalidate="novalidate">
+                    {% csrf_token %}
+                        <div class="box-body p-3">                   
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="js-form-message">
+                                                <label class="form-label">
+                                                    First Name                                    
+                                                </label>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control required_form_basicinfo" name="fname" value="{{ user.first_name }}" placeholder="Enter your first name">                                       
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="js-form-message">
+                                                <label class="form-label">
+                                                Last Name                                    
+                                                </label>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control required_form_basicinfo" name="lname" value="{{ user.last_name }}" placeholder="Enter your last name">                                       
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <div class="row">
+                                        <div class="col-9">                                        
+                                            <div class="d-flex">
+                                                <label id="phoneNumberLabel" class="form-label mr-2">
+                                                    Birth date
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="form-check form-check-inline mb-2">
+                                                    <input class="form-check-input chk_public" {% if user.public_birth == '1' %} checked {% endif %} type="checkbox" name="public_birth" id="public_birth">
+                                                    <label class="form-check-label" for="public_birth">
+                                                        {% if user.public_birth == '1' %}
+                                                            Show to public
+                                                        {% else %}
+                                                            Hide from public
+                                                        {% endif %}                                                    
+                                                    </label>
+                                                </div>
+                                                </div>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="js-form-message">
+                                                        <div class="form-group">
+                                                            <select class="form-control custom-select birthMonth" name="birthMonth" data-msg="Please select month." data-error-class="u-has-error" data-success-class="u-has-success">
+                                                                <option value="">Select month</option>
+                                                                <option value="January">January</option>
+                                                                <option value="February">February</option>
+                                                                <option value="March">March</option>
+                                                                <option value="April">April</option>
+                                                                <option value="May">May</option>
+                                                                <option value="June">June</option>
+                                                                <option value="July">July</option>
+                                                                <option value="August">August</option>
+                                                                <option value="September">September</option>
+                                                                <option value="October">October</option>
+                                                                <option value="November">November</option>
+                                                                <option value="December">December</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="js-form-message">
+                                                        <div class="form-group">
+                                                            <select class="form-control custom-select birthDay" name="birthDay" required="" data-msg="Please select date." data-error-class="u-has-error" data-success-class="u-has-success">
+                                                                <option value="">Select date</option>
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                                <option value="4">4</option>
+                                                                <option value="5">5</option>
+                                                                <option value="6">6</option>
+                                                                <option value="7">7</option>
+                                                                <option value="8">8</option>
+                                                                <option value="9">9</option>
+                                                                <option value="10">10</option>
+                                                                <option value="11">11</option>
+                                                                <option value="12">12</option>
+                                                                <option value="13">13</option>
+                                                                <option value="14">14</option>
+                                                                <option value="15">15</option>
+                                                                <option value="16">16</option>
+                                                                <option value="17">17</option>
+                                                                <option value="18">18</option>
+                                                                <option value="19">19</option>
+                                                                <option value="20">20</option>
+                                                                <option value="21">21</option>
+                                                                <option value="22">22</option>
+                                                                <option value="23">23</option>
+                                                                <option value="24">24</option>
+                                                                <option value="25">25</option>
+                                                                <option value="26">26</option>
+                                                                <option value="27">27</option>
+                                                                <option value="28">28</option>
+                                                                <option value="29">29</option>
+                                                                <option value="30">30</option>
+                                                                <option value="31">31</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="js-form-message">
+                                                        <div class="form-group">
+                                                            <select class="form-control custom-select birthYear" name="birthYear" data-msg="Please select year." data-error-class="u-has-error" data-success-class="u-has-success">
+                                                                <option value="">Select year</option>
+                                                                <option value="1900">1900</option>
+                                                                <option value="1901">1901</option>
+                                                                <option value="1902">1902</option>
+                                                                <option value="1903">1903</option>
+                                                                <option value="1904">1904</option>
+                                                                <option value="1905">1905</option>
+                                                                <option value="1906">1906</option>
+                                                                <option value="1907">1907</option>
+                                                                <option value="1908">1908</option>
+                                                                <option value="1909">1909</option>
+                                                                <option value="1910">1910</option>
+                                                                <option value="1911">1911</option>
+                                                                <option value="1912">1912</option>
+                                                                <option value="1913">1913</option>
+                                                                <option value="1914">1914</option>
+                                                                <option value="1915">1915</option>
+                                                                <option value="1916">1916</option>
+                                                                <option value="1917">1917</option>
+                                                                <option value="1918">1918</option>
+                                                                <option value="1919">1919</option>
+                                                                <option value="1920">1920</option>
+                                                                <option value="1921">1921</option>
+                                                                <option value="1922">1922</option>
+                                                                <option value="1923">1923</option>
+                                                                <option value="1924">1924</option>
+                                                                <option value="1925">1925</option>
+                                                                <option value="1926">1926</option>
+                                                                <option value="1927">1927</option>
+                                                                <option value="1928">1928</option>
+                                                                <option value="1929">1929</option>
+                                                                <option value="1930">1930</option>
+                                                                <option value="1931">1931</option>
+                                                                <option value="1932">1932</option>
+                                                                <option value="1933">1933</option>
+                                                                <option value="1934">1934</option>
+                                                                <option value="1935">1935</option>
+                                                                <option value="1936">1936</option>
+                                                                <option value="1937">1937</option>
+                                                                <option value="1938">1938</option>
+                                                                <option value="1939">1939</option>
+                                                                <option value="1940">1940</option>
+                                                                <option value="1941">1941</option>
+                                                                <option value="1942">1942</option>
+                                                                <option value="1943">1943</option>
+                                                                <option value="1944">1944</option>
+                                                                <option value="1945">1945</option>
+                                                                <option value="1946">1946</option>
+                                                                <option value="1947">1947</option>
+                                                                <option value="1948">1948</option>
+                                                                <option value="1949">1949</option>
+                                                                <option value="1950">1950</option>
+                                                                <option value="1951">1951</option>
+                                                                <option value="1952">1952</option>
+                                                                <option value="1953">1953</option>
+                                                                <option value="1954">1954</option>
+                                                                <option value="1955">1955</option>
+                                                                <option value="1956">1956</option>
+                                                                <option value="1957">1957</option>
+                                                                <option value="1958">1958</option>
+                                                                <option value="1959">1959</option>
+                                                                <option value="1960">1960</option>
+                                                                <option value="1961">1961</option>
+                                                                <option value="1962">1962</option>
+                                                                <option value="1963">1963</option>
+                                                                <option value="1964">1964</option>
+                                                                <option value="1965">1965</option>
+                                                                <option value="1966">1966</option>
+                                                                <option value="1967">1967</option>
+                                                                <option value="1968">1968</option>
+                                                                <option value="1969">1969</option>
+                                                                <option value="1970">1970</option>
+                                                                <option value="1971">1971</option>
+                                                                <option value="1972">1972</option>
+                                                                <option value="1973">1973</option>
+                                                                <option value="1974">1974</option>
+                                                                <option value="1975">1975</option>
+                                                                <option value="1976">1976</option>
+                                                                <option value="1977">1977</option>
+                                                                <option value="1978">1978</option>
+                                                                <option value="1979">1979</option>
+                                                                <option value="1980">1980</option>
+                                                                <option value="1981">1981</option>
+                                                                <option value="1982">1982</option>
+                                                                <option value="1983">1983</option>
+                                                                <option value="1984">1984</option>
+                                                                <option value="1985">1985</option>
+                                                                <option value="1986">1986</option>
+                                                                <option value="1987">1987</option>
+                                                                <option value="1988">1988</option>
+                                                                <option value="1989">1989</option>
+                                                                <option value="1990">1990</option>
+                                                                <option value="1991">1991</option>
+                                                                <option value="1992">1992</option>
+                                                                <option value="1993">1993</option>
+                                                                <option value="1994">1994</option>
+                                                                <option value="1995">1995</option>
+                                                                <option value="1996">1996</option>
+                                                                <option value="1997">1997</option>
+                                                                <option value="1998">1998</option>
+                                                                <option value="1999">1999</option>
+                                                                <option value="2000">2000</option>
+                                                                <option value="2001">2001</option>
+                                                                <option value="2002">2002</option>
+                                                                <option value="2003">2003</option>
+                                                                <option value="2004">2004</option>
+                                                                <option value="2005">2005</option>
+                                                                <option value="2006">2006</option>
+                                                                <option value="2007">2007</option>
+                                                                <option value="2008">2008</option>
+                                                                <option value="2009">2009</option>
+                                                                <option value="2010">2010</option>
+                                                                <option value="2011">2011</option>
+                                                                <option value="2012">2012</option>
+                                                                <option value="2013">2013</option>
+                                                                <option value="2014">2014</option>
+                                                                <option value="2015">2015</option>
+                                                                <option value="2016">2016</option>
+                                                                <option value="2017">2017</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label">
+                                                Gender
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="js-form-message">
+                                                <div class="form-group">
+                                                    <select class="form-control custom-select" name="gender" data-msg="Please select your gender." data-error-class="u-has-error" data-success-class="u-has-success">
+                                                        <option value="male" {% if user.gender == 'male' %} selected {% endif %}>Male</option>
+                                                        <option value="female" {% if user.gender == 'female' %} selected {%endif%}>Female</option>
+                                                        <option value="other" {% if user.gender == 'other' %} selected {%endif%}>Other</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>
+                            
+                            
+                            <div class="row">
+                                <!-- Input -->
+                                <div class="col-sm-6 mb-2">
+                                    <div class="js-form-message">                                   
+                                        <div class="d-flex">
+                                            <label id="emailLabel" class="form-label mr-2">
+                                            Email address
+                                            <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="form-check form-check-inline mb-2">
+                                                <input class="form-check-input  chk_public" {% if user.public_email == '1' %} checked {% endif %} type="checkbox" name="public_email" id="public_email">
+                                                <label class="form-check-label" for="public_email">
+                                                    {% if user.public_email == '1' %}
+                                                        Show to public
+                                                    {% else %}
+                                                        Hide from public
+                                                    {% endif %}      
+                                                </label>
+                                            </div>
+                                            </div>
+                                        <div class="form-group">
+                                            <input type="email" class="form-control required_form_basicinfo" name="email" value="{{ user.email }}" placeholder="Enter your email address" aria-label="Enter your email address" required="" aria-describedby="emailLabel" data-msg="Please enter a valid email address." data-error-class="u-has-error" data-success-class="u-has-success">
+                                            <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Input -->
+                                <!-- Input -->
+                                <div class="col-sm-6 mb-2">
+                                    <div class="js-form-message">                                   
+                                        <div class="d-flex">
+                                            <label id="phoneNumberLabel" class="form-label mr-2">
+                                                Phone number
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="form-check form-check-inline mb-2">
+                                                <input class="form-check-input chk_public" type="checkbox" {% if user.public_phone == '1' %} checked {% endif %} name="public_phone" id="public_phone">
+                                                <label class="form-check-label" for="public_phone">
+                                                    {% if user.public_phone == '1' %}
+                                                        Show to public
+                                                    {% else %}
+                                                        Hide from public
+                                                    {% endif %}
+                                                </label>
+                                            </div>
+                                            </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="tel" name="phone" value="{{ user.phone }}" placeholder="Enter your phone number" aria-label="Enter your phone number" required="" aria-describedby="phoneNumberLabel" data-msg="Please enter a valid phone number" data-error-class="u-has-error" data-success-class="u-has-success">
+                                        </div>
+                                    </div>                            
+                                </div>
+                                <!-- End Input -->
+    
+                                
+                            </div>
+                            <div class="row">
+                                
+                                <!-- Input -->
+                                <div class="col-sm-6 mb-2">
+                                <div class="js-form-message">
+                                    <label id="websiteLabel" class="form-label">
+                                    Current job title
+                                    <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="form-group">
+                                        <input class="form-control" type="text"  name="jobtitle" value="{{ user.jobtitle }}" placeholder="Enter your current job title">
+                                        
+                                    </div>
+                                </div>
+                                </div>
+                                <!-- End Input -->
+                                    <!-- Input -->
+                                    <div class="col-sm-6 mb-2">
+                                    <div class="js-form-message">
+                                        <label id="locationLabel" class="form-label">
+                                        Current location
+                                        <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="location" placeholder="Enter your location" aria-label="Enter your location" required="" aria-describedby="locationLabel" data-msg="Please enter your location." data-error-class="u-has-error" data-success-class="u-has-success" value="{{ user.location }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Input -->
+                            </div>
+                        </div>
+                                         
+                    </form>  
+                    <div class="mb-3 text-right">
+                        <a class="font-weight-bold btn btn-link rounded p-3" href="#"> &nbsp;&nbsp;&nbsp;&nbsp; Cancel &nbsp;&nbsp;&nbsp;&nbsp; </a>
+                        <button type="button" class="btn btn-primary btn-sm" id="btn_store_basic_profile"> Save Changes </button>
+                    </div>                             
+                </div>               
+            </main>
+        </div>
+        <input type="hidden" id="stored_birthMonth" value="{{ user.birthMonth }}">
+        <input type="hidden" id="stored_birthYear" value="{{ user.birthYear }}">
+        <input type="hidden" id="stored_birthDay" value="{{ user.birthDay }}">
+    </div>
+</div>
+{% include "layout/editmodal.html" %}
+<script>
+    var currentPage = 1;
+    var pagenum = 1;
+
+    var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp','avi','mp4'];
+    var imgExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+    var videoExtension = ['avi','mp4'];
+    var max_file_number = 10;
+    var item_width = 160;
+    var curSlidePos = 0;
+    var slideLeft = 0
+    var cur_user_avatar_url = '';
+    var cur_user_full_name = '';
+    var max_cnt = 500;
+    var where = '';
+    var is_mobile = false;
+   
+    function get_content_list()
+    {
+        $("#loading").css("display","block");        
+        var data = $("#pagination-form").serialize();
+        $.ajax({
+            url: "{% url 'blog:get_content_list' %}?"+data,
+            method: 'GET',            
+            success: function (response) {                
+                var data = response.results;                
+                $("#loading").css("display","none");                
+                pagenum = response.pagenum;
+                $(".total-page").html(pagenum);
+                if(data.length>0)
+                {
+                    for(var i=0;i<data.length;i++)
+                    {
+                        var html = '<div data-pid="'+data[i].post_id+'" class="post_item_view post_item_'+data[i].post_id+' box shadow-sm border rounded bg-white mb-3 osahan-post"><div class="p-3 d-flex align-items-center border-bottom osahan-post-header pos_rel"><div class="dropdown-list-image mr-3"><img class="rounded-circle" src="/media/'+data[i].avatar+'" alt=""></div><div class="font-weight-bold mr-auto"><div class="text-truncate"><a class="text-blue font-weight-bold" href="/user/'+data[i].username+'">'+data[i].fullname+'</a></div><div class="small text-gray-500"></div></div>';
+                                                   
+                            html += `
+                                <div class="dropdown">
+                                    <label><span class="ml-auto small ">${data[i].created_at}</span> ago</label>`;
+                                    if(data[i].me == '1')
+                                    { 
+                                    html +=  `<button class="btn btn_dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown_custom_position"> 
+                                        <button data-id="${data[i].post_id}" class="btn_transparent dropdown-item btn_edit_post"><i class="far fa-edit"></i> Edit</button>
+                                        <button data-id="${data[i].post_id}" class="btn_transparent dropdown-item btn_delete_post"><i class="far fa-trash-alt"></i> Delete</button>
+                                        <button data-id="${data[i].post_id}" class="btn_transparent dropdown-item btn_hide_post btn_hide_post_${data[i].post_id}"><i class="fas fa-times"></i> `;
+                                        if(data[i].public == "1")
+                                        {
+                                            html+=`Hide from public`;
+                                        }
+                                        else
+                                        {
+                                            html+=`Show to public`;
+                                        }
+                                        
+                                html+=` </button>
+                                    </div>`;
+                                    }
+                                
+                           
+                        html +=`</div></div><div class="p-3 border-bottom osahan-post-body"><span class="post_text_limit post_content_text mb-0 post_content_${data[i].post_id}">${data[i].content}</span>`;
+                        if(data[i].content.length > 250)
+                        {
+                            html+=`                                
+                                <button class="btn_transparent btn_show_more_content" data-id="${data[i].post_id}">
+                                    read more
+                                </button>                                
+                            `;
+                        }            
+                        html +=`<div>`;
+                        
+                        if(data[i].attach.length > 0)
+                        {
+                            var subhtml = '';
+                            var attachs = data[i].attach;
+                            subhtml += `
+                                <section class="regular slider mt-3">                                    
+                            `;                                
+
+                            for(var j=0;j<attachs.length;j++)
+                            {                                
+                                var fileExt = attachs[j].split(".")[1];
+                                
+                                if ($.inArray(fileExt, imgExtension) == -1) {
+                                    subhtml += '<div class="attach_slider_item"><div class="warp_attach"><video class="attached_item_view attached_item_'+data[i].post_id+'" data-url="'+attachs[j]+'" src="/media/'+attachs[j]+'" controls></video></div></div>';
+                                }
+                                else
+                                {
+                                    subhtml += '<div class="attach_slider_item"><div class="warp_attach"><img class="attached_item_view attached_item_'+data[i].post_id+'" data-url="'+attachs[j]+'" src="/media/'+attachs[j]+'" alt=""></div></div>';
+                                }
+                               
+                            }
+                            subhtml += `
+                                </section>
+                            `;
+                            html += subhtml;
+                        }
+
+                        html +='</div></div><div class="p-3 border-bottom osahan-post-footer"><button class="mr-3 text-secondary btn_transparent btn_like" data-id="'+data[i].post_id+'">';
+                        if(data[i].liked == '0')
+                        {
+                            html += '<i class="far fa-heart text-danger"></i>';
+                        }
+                        else
+                        {
+                            html += '<i class="fas fa-heart text-danger"></i>';
+                        }
+                        html +='&nbsp;<span class="likes">'+data[i].likes+'</span><label class="ml-1">LIKES</label></button><button type="button" data-id="'+data[i].post_id+'" class="mr-3 text-secondary btn_transparent btn_viewcomment"><i class="fas fa-comment-alt text-blue"></i>&nbsp;<span class="cnt_comment_'+data[i].post_id+'">'+data[i].comments+'</span><label class="ml-1">COMMENTS</label></button><label class="mr-3"><i class="fas fa-eye text-success"></i>&nbsp;<span class="">'+data[i].views+'</span><label class="ml-1">VIEWS</label></label><label class="mr-3"><i class="fas fa-share-alt"></i>&nbsp;<span class="">0</span><label class="ml-1">SHARES</label></label>';
+                        html +=`
+                        <div class="comment_area">
+                            <div class="p-3 auto_comment_area">
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Awesome!!">Awesome!!</button>
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Nice pics!">Nice pics!</button>
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Congrats!">Congrats!</button>  
+                                </div>
+                                <div class="auto_comment_area_item">   
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Good Looking!">Good Looking!</button>
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="How are you?">How are you?</button>
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Where are you?">Where are you?</button>                           
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Excellent!">Excellent!</button>                           
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Helpful information!">Helpful information!</button>                           
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="Please most more information">Please most more information</button>                           
+                                </div>
+                                <div class="auto_comment_area_item">
+                                    <button type="button" class="btn btn_autocomment btn-outline-auto btn-sm mr-1" data-pid="${data[i].post_id}" data-text="I am interested">I am interested</button>                           
+                                </div>                                
+                            </div>  
+                            <div class="p-3 d-flex align-items-center w-100">
+                                <div class="dropdown-list-image mr-3">
+                                    <img class="rounded-circle" src="${cur_user_avatar_url}"> 
+                                </div>
+                                <div class="w-100 pos_rel">
+                                    <textarea placeholder="Write a comment" class="form-control comment_content_txt shadow-none comment_content_txt_${data[i].post_id}" rows="1" name="content"></textarea>
+                                    <button type="button" class="btn_store_comment" data-pid="${data[i].post_id}">
+                                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                                    </button>                                   
+                                </div>
+                            </div>                          
+                            <div class="comment_content display_closed comment_content_${data[i].post_id}">
+                                <div class="added_comment_${data[i].post_id}">  
+                                        
+                                </div>
+                                <div class="added_comment_action py-1 d-flex">
+                                    <button class="btn_transparent display_none mr-auto btn_view_more btn_view_more_${data[i].post_id}" data-pid="${data[i].post_id}">View More Comments</button>
+                                    <label class="total_cnt_comments total_cnt_comments_${data[i].post_id}">
+                                        
+                                    </label>
+                                </div>
+                            </div>
+                        </div></div></div>`;
+                        $('.post_list').append(html);
+                    }                    
+                    
+                    $(".regular").each(function(){
+                        if (!$(this).hasClass('slick-initialized')) 
+                        {
+                            $(this).slick({
+                                dots: true,
+                                infinite: true,
+                                slidesToShow: 1,
+                                slidesToScroll: 1,                     
+                                responsive: [ 
+                                ]
+                            });
+                        }  
+                    });                  
+                    $(".auto_comment_area").each(function(){
+                        if (!$(this).hasClass('slick-initialized')) 
+                        {
+                            $(this).slick({
+                                dots: false,
+                                infinite: true,
+                                speed: 300,
+                                slidesToShow: 1,
+                                centerMode: true,
+                                variableWidth: true                     
+                                
+                            });
+                        }  
+                    });                    
+                    
+                }
+                else
+                {
+                    $(".total-page").css('display','none');
+                    $("#pagination-form").css('display','none');                    
+                }
+            }
+        })
+    }
+
+    $(document).ready(function(){
+        $(".birthMonth").val($("#stored_birthMonth").val());
+        $(".birthDay").val($("#stored_birthDay").val());
+        $(".birthYear").val($("#stored_birthYear").val());
+        $('.required_form_basicinfo').change(function(){
+            $(this).removeClass('alert-border');
+         });
+        $(document).on('change','#fileAttachmentBtn',function(){
+            var file = document.getElementById('fileAttachmentBtn');
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            var formdata = new FormData;
+            if (file.files[0])
+            {
+                if ($.inArray(file.files[0]['name'].split('.').pop().toLowerCase(), fileExtension) == -1) {
+                    alert("Only formats are allowed : "+fileExtension.join(', '));
+                    $("#fileAttachmentBtn").val("");
+                    return false;
+                }
+                if(file.files[0].size > 2000000)
+                {
+                    alert("File size should be less than 2Mb.");
+                    return false;
+                }
+                formdata.append('attach',file.files[0]);
+            }
+            var token = '{{csrf_token}}';
+            formdata.append('is_store','1');
+            $("#loading").css("display","block");
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url:"{% url 'account:upload_avatar' %}",
+                type: 'post',
+                dataType: 'json',
+                data: formdata,
+
+                processData: false,
+                contentType: false,
+                success: function(result){                  
+                    location.reload();
+                }
+            });
+        });
+
+        $(document).on('click','.btn-remove-avatar',function(){
+            var formdata = new FormData;
+            formdata.append('attach','');
+            var token = '{{csrf_token}}';
+            formdata.append('is_store','0');
+            $("#loading").css("display","block");
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url:"{% url 'account:upload_avatar' %}",
+                type: 'post',
+                dataType: 'json',
+                data: formdata,
+
+                processData: false,
+                contentType: false,
+                success: function(result){                    
+                    $("#loading").css("display","none");
+                    if(result.response)
+                    {
+                        $(".img-user-avatar").attr('src','/static/img/user.png');
+                    }
+                }
+            });
+        });
+        
+        $(document).on('click','#btn_store_aboutme',function(){
+            if($(".aboutme").val() == "")
+            {
+                return false;
+            }
+            var data = $('#form_aboutMe').serialize();
+            $("#loading").css("display","block");
+            $.ajax({                
+                url:"{% url 'account:store_aboutme' %}",
+                type: 'post',
+                dataType: 'json',
+                data: data,
+
+                success: function(result){                    
+                    $("#loading").css("display","none");
+                    Swal.fire('Successfully stored!')
+                }
+            });
+        });
+
+        $(document).on('click','#btn_store_social_link',function(){
+            
+            var data = $('#form_socialLink').serialize();
+            $("#loading").css("display","block");
+            $.ajax({                
+                url:"{% url 'account:store_sociallink' %}",
+                type: 'post',
+                dataType: 'json',
+                data: data,
+
+                success: function(result){                    
+                    $("#loading").css("display","none");
+                    if(result.response)
+                    {
+                        Swal.fire('Successfully stored!')
+                    }
+                }
+            });
+        });
+        
+        $(document).on('click','#btn_store_basic_profile',function(){
+            var is_checked = true;
+            $('#form_basicinfo .required_form_basicinfo').each(function(){
+                if($(this).val()=="")
+                {
+                    $(this).addClass('alert-border');
+                    is_checked = false;
+                }
+            });            
+            if(is_checked)
+            {
+                var data = $('#form_basicinfo').serialize();
+                $("#loading").css("display","block");
+                $.ajax({                
+                    url:"{% url 'account:store_basicinfo' %}",
+                    type: 'post',
+                    dataType: 'json',
+                    data: data,
+
+                    success: function(result){                    
+                        $("#loading").css("display","none");
+                        var data = result.response;
+                        if(data.emailcount == '0' && data.phonecount == '0')
+                        {
+                            Swal.fire('Successfully stored!');
+                        }
+                        else if(data.emailcount == '1' && data.phonecount == '1')
+                        {
+                            Swal.fire('The phone number and email already exsist.Please try another.');
+                        }
+                        else if(data.emailcount == '1')
+                        {
+                            Swal.fire('The email already exsist.Please try another.');
+                        }
+                        else
+                        {
+                            Swal.fire('The phone number already exsist.Please try another.');
+                        }
+                    
+                    }
+                });
+            }            
+        });
+    
+        $(document).on('click','#btn_store_experience',function(){    
+            var checkval = true;
+            $('#form_experience .required_form_basicinfo').each(function(){
+                
+                if($(this).val()=="")
+                {
+                    $(this).addClass('alert-border');
+                    checkval = false;
+                }
+            });
+            if(checkval)
+            {
+                var data = $('#form_experience').serialize();
+                $("#loading").css("display","block");
+                $.ajax({                
+                    url:"{% url 'account:store_experience' %}",
+                    type: 'get',
+                    dataType: 'json',
+                    data: data,
+
+                    success: function(result){  
+                        $("#loading").css("display","none");
+                        location.reload();
+                    }
+                });
+            }
+
+        });
+    
+
+        $(document).on('click','.btn_delete_experience',function(){    
+                      
+            $("#loading").css("display","block");
+            $.ajax({                
+                url:"{% url 'account:delete_experience' %}",
+                type: 'get',
+                dataType: 'json',
+                data: {id:$(this).data('id')},
+
+                success: function(result){  
+                    $("#loading").css("display","none");
+                    location.reload();
+                }
+            });
+
+        });
+        $(document).on('click','#btn_store_education',function(){    
+            var checkval = true;
+            $('#form_education .required_form_basicinfo').each(function(){
+                
+                if($(this).val()=="")
+                {
+                    $(this).addClass('alert-border');
+                    checkval = false
+                }
+            });
+            if(checkval)
+            {
+                var data = $('#form_education').serialize();
+                $("#loading").css("display","block");
+                $.ajax({                
+                    url:"{% url 'account:store_education' %}",
+                    type: 'get',
+                    dataType: 'json',
+                    data: data,
+
+                    success: function(result){  
+                        $("#loading").css("display","none");
+                        location.reload();
+                    }
+                });
+            }
+            
+
+        });
+
+        $(document).on('click','.btn_delete_education',function(){    
+                      
+            $("#loading").css("display","block");
+            $.ajax({                
+                url:"{% url 'account:delete_education' %}",
+                type: 'get',
+                dataType: 'json',
+                data: {id:$(this).data('id')},
+
+                success: function(result){  
+                    $("#loading").css("display","none");
+                    location.reload();
+                }
+            });
+
+        });
+                
+        
+        $('.chk_public').change(function() {
+            var elelabel = $(this).parent().find('label');
+            if ($(this).is(":checked") == true) 
+            {                               
+                elelabel.html("Show to public");
+            } 
+            else 
+            { 
+                elelabel.html("Hide from public");
+            } 
+
+        });
+
+        // posts_part
+
+        $(".btn-current-page").html(currentPage);
+        $("#currentPage").val(currentPage);
+        $(".total-page").html(pagenum);
+        if ($(window).width() <= 600)
+        { 
+            is_mobile = true;
+        }
+        else
+        {
+            is_mobile = false;
+        }        
+        get_content_list();
+
+        cur_user_avatar_url = $('.cur_user_avatar_url').prop('src');
+        cur_user_full_name = $(".user_full_name").html();
+        where = $("input[name='where']").val();
+        $("#fileAttachmentBtn").change(function() 
+        {
+            var file = document.getElementById('fileAttachmentBtn');
+            var cur_file_number = 0; 
+            var available_number = 0;
+            $(".uploaded_files_item").each(function(){
+                cur_file_number++;
+            })
+            available_number = max_file_number - cur_file_number;
+            var total_file_num = 0;
+            var temp_con = 0;
+            total_file_num = this.files.length;
+            if(total_file_num > available_number)
+            {
+                if(available_number < 1)
+                {
+                    alert("Maximum 10 files allowed !");                    
+                }
+                else
+                {
+                    alert("You can upload maximum "+ available_number +" files!");
+                }
+                
+                return false;
+            }
+            for (let index = 0; index < this.files.length; index++) {
+
+                if (this.files && this.files[index]) 
+                {   
+                    if(this.files[index].size > 500000000)
+                    {
+                        alert("File size should not exceed 2mb !");
+                        return false;
+                    }
+                }
+            }            
+            
+            $("#loading").css("display","block");
+            for (let index = 0; index < this.files.length; index++) {
+
+                if (this.files && this.files[index]) 
+                {                    
+                    if ($.inArray(this.files[index]['name'].split('.').pop().toLowerCase(), fileExtension) == -1) {
+                        alert("Only formats are allowed : "+fileExtension.join(', '));
+                        $("#fileAttachmentBtn").val("");
+                        $("#loading").css("display","none");
+                        return false;
+                    }
+                    if(this.files[index].size > 500000000)
+                    {
+                        alert("File size should be less than 2Mb.");
+                        $("#loading").css("display","none");
+                        return false;
+                    }
+                    $('.slider_wrap').css('display','block');
+                    var formdata = new FormData;
+            
+                    var token = '{{csrf_token}}';
+                    formdata.append('attach',file.files[index]);
+                    
+                    $.ajax({
+                        headers: { "X-CSRFToken": token },
+                        url:"{% url 'blog:store_postattach' %}",
+                        type: 'post',
+                        dataType: 'json',
+                        data: formdata,
+
+                        processData: false,
+                        contentType: false,
+                        success: function(result){    
+                            var data = result.attachname     
+                            var fileExt = data.split(".")[1];
+                            let html = '<div class="uploaded_files_item">';
+                            if ($.inArray(fileExt, imgExtension) == -1) {
+                                html += '<video src="/media/'+data+'" controls></video>';
+                            }
+                            else
+                            {
+                                html += '<img src="/media/'+data+'" alt="">';
+                            }
+                            html += '<button class="btn_transparent btn_delete_uploadedFile"><svg style="width:15px;height:15px;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" class="svg-inline--fa fa-times fa-w-11 fa-3x"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z" class=""></path></svg></button><input type="hidden" name="attachname[]" value="'+data+'"></div>';
+                            
+                            $('.uploaded_files').append(html);
+                        }
+                    });               
+                }
+            }
+            $("#loading").css("display","none");
+        }); 
+
+       
+        // --------------------------------------------------------------------
+                                     
+        $(document).on('click','.slide_arrow_left',function(){
+
+           
+            var cur_file_number = 0; 
+            $(".uploaded_files_item").each(function(){
+                cur_file_number++;
+            })
+            var cur_width = $('.slider_wrap').width();        
+            var remainWidth = (cur_file_number - curSlidePos)*item_width;
+            
+            if(remainWidth < cur_width)
+            {                
+                if((cur_width-remainWidth) >= item_width)
+                {
+                    return false;
+                } 
+            }
+            curSlidePos = curSlidePos + 1;
+            img_slider()
+            
+        });
+
+        $(document).on('click','.slide_arrow_right',function(){   
+            if(curSlidePos < 1)
+            {
+                curSlidePos = 0;
+                return false;
+            }         
+            else
+            {
+                curSlidePos = curSlidePos - 1;
+                img_slider();
+            }
+            
+        });
+        
+        
+
+
+        $(window).scroll(function() {
+            if($(window).scrollTop() + $(window).height() == $(document).height()) {
+                if(currentPage==pagenum)
+                {                        
+                    return false;
+                }
+                currentPage++;
+                $(".btn-current-page").html(currentPage);
+                $("#currentPage").val(currentPage);
+                get_content_list();
+            }
+         });
+         
+    
+        $(document).on('change','#editUserAvatar',function(){
+            var file = document.getElementById('editUserAvatar');
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            var formdata = new FormData;
+            if (file.files[0])
+            {
+                if ($.inArray(file.files[0]['name'].split('.').pop().toLowerCase(), fileExtension) == -1) {
+                    alert("Only formats are allowed : "+fileExtension.join(', '));
+                    $("#editUserAvatar").val("");
+                    return false;
+                }
+                if(file.files[0].size > 500000000)
+                {
+                    alert("File size should be less than 2Mb.");
+                    return false;
+                }
+                formdata.append('attach',file.files[0]);
+            }
+            var token = '{{csrf_token}}';
+            formdata.append('is_store','1');
+            $("#loading").css("display","block");
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url:"{% url 'account:upload_avatar' %}",
+                type: 'post',
+                dataType: 'json',
+                data: formdata,
+
+                processData: false,
+                contentType: false,
+                success: function(result){                  
+                    location.reload();
+                }
+            });
+        });
+            
+
+    });
+</script>
+{% endblock %}

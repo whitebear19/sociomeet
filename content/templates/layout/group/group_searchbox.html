@@ -1,0 +1,14 @@
+{% load static %}
+<div>
+    <div class="d-flex-normal">
+        <div class="search_group mr-auto pos_rel w-100 text-center mb-2">
+            <input type="text" placeholder="Search for a group name or keyword..." class="search_group_input">
+            <button class="btn_transparent btn_search_group">
+                <i class="feather-search"></i>
+            </button>
+        </div>
+        <div class="create_group ml-3 text-center mb-2">
+            <a href="{% url 'groups:create' %}" class="text-blue fs-16 create_new"><i class="fas fa-plus"></i> Create a group</a>
+        </div>
+    </div>                        
+</div>
