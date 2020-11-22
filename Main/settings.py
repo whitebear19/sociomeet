@@ -151,7 +151,7 @@ MEDIA_ROOT=os.path.join(CONTENT_DIR,'media')
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'wanghuajinksh@gmail.com'
-EMAIL_HOST_PASSWORD = 'gtpzwarwxndzgzyl'
+EMAIL_HOST_USER = 
+EMAIL_HOST_PASSWORD = 
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'wanghuajinksh@gmail.com'
+DEFAULT_FROM_EMAIL = 
